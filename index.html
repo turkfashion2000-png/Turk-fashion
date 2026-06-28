@@ -90,15 +90,50 @@ body{
 
 /* ========== TOP BAR ========== */
 .topbar{
-  background:var(--gold);
-  color:var(--black);
-  text-align:center;
-  padding:12px 20px;
-  font-size:.8rem;
-  font-weight:600;
-  letter-spacing:.1em;
+  background:#FFFFFF;
+  color:#000000;
+  padding:10px 0;
+  font-size:.85rem;
+  font-weight:500;
+  letter-spacing:.05em;
+  overflow:hidden;
+  white-space:nowrap;
 }
-.topbar a{color:var(--black);text-decoration:underline;}
+.topbar a{color:#000000;text-decoration:underline;}
+.topbar-inner{
+  display:inline-block;
+  animation:ticker-scroll 30s linear infinite;
+  padding-right:100%;
+}
+@keyframes ticker-scroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-100%);}
+}
+@media (prefers-reduced-motion:reduce){
+  .topbar-inner{animation:none;display:block;text-align:center;padding-right:0;}
+}
+/* Arrow navigation for category strips */
+.cat-strip-outer{position:relative;}
+.cat-strip-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:1.8rem;
+  color:#333;
+  z-index:10;
+  padding:4px 8px;
+  line-height:1;
+}
+.cat-strip-arrow:hover{color:#000;}
+.cat-strip-arrow.arrow-right{right:-20px;}
+.cat-strip-arrow.arrow-left{left:-20px;}
+@media(max-width:768px){
+  .cat-strip-arrow.arrow-right{right:-10px;}
+  .cat-strip-arrow.arrow-left{left:-10px;}
+}
 
 /* ========== HEADER ========== */
 header{
@@ -109,41 +144,59 @@ header{
   transition:background var(--transition);
 }
 body.light-mode header{background:rgba(255,255,255,0.97);}
+
+/* Row 1: site name — desktop only */
+.header-top-row{
+  display:flex;align-items:center;justify-content:center;
+  padding:10px 24px 4px;
+  border-bottom:1px solid var(--border);
+}
+.header-logo-center{
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size:1.5rem;font-weight:300;
+  color:var(--text);
+  letter-spacing:.26em;
+  text-decoration:none;white-space:nowrap;
+  transition:opacity var(--transition);
+  cursor:pointer;
+  text-transform:uppercase;
+  line-height:1;
+  text-shadow:none;
+  user-select:none;-webkit-user-select:none;
+}
+.header-logo-center:hover{opacity:.7;}
+
+/* Row 2: actions bar */
 .header-inner{
   max-width:1400px;margin:0 auto;
   display:flex;align-items:center;
-  padding:7px 24px;gap:20px;
-  flex-direction:row-reverse;
+  padding:6px 24px;gap:16px;
+  flex-direction:row;
 }
 .header-logo-group{
   display:flex;align-items:center;gap:8px;flex-shrink:0;
   flex-direction:row-reverse;
 }
+
+/* Mobile logo — hidden on desktop */
+.logo-mobile{display:none;}
+
 .logo{
   font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
   font-size:1.35rem;font-weight:300;
-  color:#111;
-  -webkit-text-fill-color: #111;
-  background: none;
-  -webkit-background-clip: unset;
-  background-clip: unset;
+  color:var(--text);
   letter-spacing:.22em;
   text-decoration:none;white-space:nowrap;
   transition:opacity var(--transition);
   cursor:pointer;
   text-transform:uppercase;
-  font-style:normal;
   line-height:1;
   text-shadow:none;
+  user-select:none;-webkit-user-select:none;
 }
-.logo:hover{
-  opacity:.7;
-  letter-spacing:.22em;
-  text-shadow:none;
-}
+.logo:hover{opacity:.7;}
 .logo span{
-  color:#111;
-  -webkit-text-fill-color: #111;
+  color:var(--text);
   font-weight:300;
   letter-spacing:.22em;
   font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
@@ -246,12 +299,58 @@ nav{
 }
 .nav-link:hover,.nav-link.active{color:var(--gold);border-bottom-color:var(--gold);}
 
+/* NAV DRAWER LINKS */
+.nav-drawer-link{
+  display:block;
+  padding:14px 24px;
+  font-size:.9rem;font-weight:600;letter-spacing:.05em;
+  color:var(--text);text-decoration:none;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:color var(--transition),background var(--transition);
+}
+.nav-drawer-link:hover{color:var(--gold);background:var(--surface2);}
+.nav-drawer-link.active{color:var(--gold);}
+
+/* DESKTOP: widen product grid + category strip */
+@media(min-width:769px){
+  .products-grid{
+    grid-template-columns:repeat(4,1fr);
+    max-width:1400px;margin-left:auto;margin-right:auto;
+  }
+  .cat-strip-wrap,.cat-products-strip-wrap{max-width:1400px;margin-left:auto;margin-right:auto;}
+
+  /* تحويل الأقسام/البانر من عمودي كامل العرض إلى شبكة متناسقة على الديسك */
+  .categories-grid{
+    flex-direction:row;
+    flex-wrap:wrap;
+    max-width:1400px;
+    margin:0 auto;
+    gap:12px;
+  }
+  .cat-card-fullrow{
+    width:calc(33.333% - 8px);
+  }
+  .cat-card-fullrow .cat-card,
+  .cat-card{
+    aspect-ratio:3/4;
+  }
+}
+@media(min-width:1200px){
+  .cat-card-fullrow{
+    width:calc(25% - 9px);
+  }
+}
+
 /* ========== PAGES ========== */
 .page{display:none;}
 .page.active{display:block;}
 
 /* ========== HERO SLIDER ========== */
-.hero{position:relative;height:85vh;min-height:500px;overflow:hidden;}
+.hero{position:relative;height:85vh;min-height:500px;max-height:750px;overflow:hidden;}
+@media(min-width:1200px){
+  .hero{height:80vh;max-height:700px;}
+}
 .slide{
   position:absolute;inset:0;
   display:flex;align-items:center;
@@ -1590,20 +1689,32 @@ tr:last-child td{border-bottom:none;}
   .admin-cards{grid-template-columns:1fr 1fr;}
 }
 @media(max-width:768px){
-  .header-inner{padding:5px 12px;gap:10px;flex-wrap:nowrap;}
-  .logo{
-    font-size:1.1rem;letter-spacing:.18em;
-    text-shadow:none;
-  }
-  .search-bar{display:flex;flex:1;min-width:0;border-bottom-width:1px;}
-  .search-bar input{padding:8px 0 8px 8px;font-size:.78rem;}
-  .search-bar button{padding:8px 6px;}
+  /* اظهار سطر اسم الموقع على الموبايل كمان (سطر مستقل فوق) */
+  .header-top-row{display:flex;padding:8px 12px 4px;}
+  .header-logo-center{font-size:1.05rem;letter-spacing:.16em;}
+  /* إخفاء لوجو الموبايل المكرر داخل صف الأيقونات */
+  .logo-mobile{display:none;}
+  /* صف الأيقونات: الهامبرغر + باقي الأيقونات بدون اللوجو */
+  .header-inner{padding:5px 12px;gap:8px;flex-wrap:nowrap;flex-direction:row;justify-content:space-between;}
   .header-icons{gap:0px;}
   .icon-btn{padding:6px 7px;font-size:1rem;}
+  .search-bar{display:flex;flex:0 1 110px;min-width:0;border-bottom-width:1px;transition:flex-basis 0.25s ease;position:relative;z-index:5;}
+  .search-bar:focus-within{
+    flex:0 0 auto;
+    position:absolute;
+    left:12px;right:60px;
+    top:50%;transform:translateY(-50%);
+    background:var(--surface);
+    z-index:50;
+    padding:4px 8px;
+    border-bottom:1.5px solid var(--gold);
+  }
+  .search-bar input{padding:8px 0 8px 6px;font-size:.72rem;}
+  .search-bar input::placeholder{font-size:.7rem;}
+  .search-bar button{padding:8px 4px;font-size:.85rem;}
   .products-grid{grid-template-columns:1fr 1fr;}
   .product-brand{font-size:.78rem;letter-spacing:.15em;padding:4px 10px;}
   .slide-content{padding:0 32px;}
-  .nav-inner{justify-content:flex-start;overflow-x:auto;padding:0 16px;}
   .cart-drawer{width:100%;right:-100%;}
   .contact-layout{grid-template-columns:1fr;}
   .footer-grid{grid-template-columns:1fr 1fr;}
@@ -2005,8 +2116,10 @@ tr:last-child td{border-bottom:none;}
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init('gbqhiuFNRi9Dgqhcy');</script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<script>emailjs.init('DiXD8I9KM8KVsnJ6f');</script>
 
 <style id="chatgpt-image-patch">
 .category-image,.category-card img,.category-banner img{
@@ -2034,14 +2147,27 @@ image-rendering:auto;
 
 <!-- HEADER -->
 <header>
-  <div class="header-inner">
-    <a class="logo" id="site-logo-text"
-       style="user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:10px;flex-shrink:0;"
-       onclick="showPage('home')">
-      <img id="site-logo-img" src="" alt="" style="display:none;height:44px;width:auto;object-fit:contain;max-width:140px;">
-      <span id="site-logo-name"><span style="color:#e53935;font-weight:700;letter-spacing:.22em;">TURK</span>&nbsp;<span style="color:#111;font-weight:300;letter-spacing:.22em;">FASHION</span></span>
+  <!-- Row 1: Site name (desktop only) -->
+  <div class="header-top-row" id="header-top-row">
+    <a class="logo header-logo-center" id="site-logo-text" onclick="showPage('home')" style="cursor:pointer;text-decoration:none;">
+      <img id="site-logo-img" src="" alt="" style="display:none;height:44px;width:auto;object-fit:contain;max-width:160px;">
+      <span id="site-logo-name"><span style="color:#e53935;font-weight:700;letter-spacing:.22em;">TURK</span>&nbsp;<span style="color:var(--text);font-weight:300;letter-spacing:.22em;">FASHION</span></span>
     </a>
-    <div class="search-bar" style="flex:1;max-width:480px;margin:0 auto;display:none;" id="search-bar-wrap">
+  </div>
+  <!-- Row 2: Actions bar -->
+  <div class="header-inner">
+    <!-- Hamburger (menu) — desktop: left side, mobile: left -->
+    <button class="icon-btn hamburger-btn" onclick="openNavDrawer()" title="القائمة" style="flex-shrink:0;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <span class="icon-label">القائمة</span>
+    </button>
+    <!-- Logo (mobile only) -->
+    <a class="logo logo-mobile" id="site-logo-mobile" onclick="showPage('home')" style="cursor:pointer;text-decoration:none;flex:1;">
+      <img id="site-logo-img-mobile" src="" alt="" style="display:none;height:36px;width:auto;object-fit:contain;max-width:120px;">
+      <span id="site-logo-name-mobile"><span style="color:#e53935;font-weight:700;letter-spacing:.18em;">TURK</span>&nbsp;<span style="color:var(--text);font-weight:300;letter-spacing:.18em;">FASHION</span></span>
+    </a>
+    <!-- Search -->
+    <div class="search-bar" style="flex:1;max-width:480px;margin:0 auto;display:flex;" id="search-bar-wrap">
       <button class="search-clear-btn" id="search-clear-btn" onclick="clearSearch()" title="مسح"><i class="fas fa-times"></i></button>
       <input type="text" id="search-input" placeholder="ابحث عن منتج، براند، أو كود..."
         oninput="handleSearchLive(this.value)"
@@ -2050,12 +2176,13 @@ image-rendering:auto;
         <i class="fas fa-search"></i>
       </button>
     </div>
+    <!-- Icons -->
     <div class="header-icons">
       <button class="icon-btn" onclick="openAdminWithPassword()" title="لوحة التحكم">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <span class="icon-label">أدمن</span>
       </button>
-      <button class="icon-btn" onclick="openProfilePanel()" title="الملف الشخصي">
+      <button class="icon-btn" id="profile-header-icon" onclick="openProfilePanel()" title="الملف الشخصي">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span class="icon-label">حسابي</span>
       </button>
@@ -2077,18 +2204,69 @@ image-rendering:auto;
   </div>
 </header>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-inner">
-    <a class="nav-link active" data-nav-static onclick="showPage('home')">الرئيسية</a>
-    <a class="nav-link" data-nav-cat onclick="showCategory('accessories')">أحذية وإكسسوارات</a>
-    <a class="nav-link" data-nav-cat onclick="showCategory('women')">الحريمي</a>
-    <a class="nav-link" data-nav-cat onclick="showCategory('men')">الرجالي</a>
-    <a class="nav-link" data-nav-static onclick="showPage('reviews')">آراء العملاء</a>
-    <a class="nav-link" data-nav-static onclick="showPage('about')">من نحن</a>
-    <a class="nav-link" data-nav-static onclick="showPage('contact')">تواصل معنا</a>
+<!-- NAV DRAWER (side panel — replaces top nav) -->
+<div id="nav-drawer" style="position:fixed;top:0;right:-320px;width:300px;height:100%;background:var(--surface);border-left:1px solid var(--border);z-index:1100;transition:right 0.32s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;display:flex;flex-direction:column;direction:rtl;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);">
+    <span style="font-size:1rem;font-weight:700;letter-spacing:.1em;">القائمة</span>
+    <button onclick="closeNavDrawer()" style="background:none;border:none;cursor:pointer;color:var(--text);font-size:1.2rem;padding:4px;"><i class="fas fa-times"></i></button>
   </div>
-</nav>
+  <div id="nav-drawer-links" style="padding:12px 0;flex:1;">
+    <!-- filled by renderNavDrawer() -->
+  </div>
+  <div style="padding:14px 20px;border-top:1px solid var(--border);">
+    <button id="nav-install-app-btn" onclick="handleInstallAppClick()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--gold);color:#000;border:none;border-radius:6px;padding:11px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;">
+      <i class="fas fa-mobile-screen-button"></i> ثبّت التطبيق على جهازك
+    </button>
+  </div>
+</div>
+<div id="nav-drawer-overlay" onclick="closeNavDrawer()" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1099;opacity:0;visibility:hidden;transition:opacity 0.3s;"></div>
+
+<!-- iOS Safari Install Instructions Modal -->
+<div id="ios-install-modal" style="display:none;position:fixed;inset:0;z-index:2000;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);">
+  <div style="background:var(--surface);width:100%;max-width:480px;border-radius:16px 16px 0 0;padding:24px 20px 30px;direction:rtl;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <span style="font-weight:700;font-size:1.05rem;">تثبيت التطبيق على آيفون</span>
+      <button onclick="document.getElementById('ios-install-modal').style.display='none'" style="background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:18px;">للتثبيت على آيفون من متصفح Safari، اتبع الخطوات التالية:</p>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="background:var(--gold);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">١</div>
+      <div style="font-size:.85rem;">اضغط على أيقونة المشاركة <i class="fas fa-arrow-up-from-bracket" style="color:var(--gold);"></i> الموجودة أسفل الشاشة</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="background:var(--gold);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">٢</div>
+      <div style="font-size:.85rem;">مرّر لأسفل واختر <strong>"إضافة إلى الشاشة الرئيسية"</strong> (Add to Home Screen)</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="background:var(--gold);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">٣</div>
+      <div style="font-size:.85rem;">اضغط <strong>"إضافة"</strong> أعلى الشاشة، وسيظهر التطبيق على شاشتك الرئيسية</div>
+    </div>
+  </div>
+</div>
+
+<!-- Android (Non-Chrome) Install Instructions Modal -->
+<div id="android-install-modal" style="display:none;position:fixed;inset:0;z-index:2000;align-items:flex-end;justify-content:center;background:rgba(0,0,0,0.55);">
+  <div style="background:var(--surface);width:100%;max-width:480px;border-radius:16px 16px 0 0;padding:24px 20px 30px;direction:rtl;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <span style="font-weight:700;font-size:1.05rem;">تثبيت التطبيق</span>
+      <button onclick="document.getElementById('android-install-modal').style.display='none'" style="background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:18px;">للتثبيت من هذا المتصفح، اتبع الخطوات التالية:</p>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="background:var(--gold);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">١</div>
+      <div style="font-size:.85rem;">اضغط على أيقونة القائمة <i class="fas fa-ellipsis-vertical" style="color:var(--gold);"></i> الموجودة أعلى المتصفح</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+      <div style="background:var(--gold);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">٢</div>
+      <div style="font-size:.85rem;">اختر <strong>"تثبيت التطبيق"</strong> أو <strong>"إضافة إلى الشاشة الرئيسية"</strong> (Install App / Add to Home Screen)</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="background:var(--gold);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">٣</div>
+      <div style="font-size:.85rem;">أكّد الإضافة، وسيظهر التطبيق على شاشتك الرئيسية</div>
+    </div>
+  </div>
+</div>
+
 
 <!-- OVERLAY -->
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
@@ -2151,17 +2329,17 @@ image-rendering:auto;
   </section>
 
   <!-- ANNOUNCEMENT BAR -->
-  <div class="topbar" id="topbar-bar" style="margin:0 0 0;"><span id="topbar-text">🔥 خصم حتى 50% على مجموعة الصيف — اطلب الآن واستمتع بطرق دفع متعددة</span></div>
+  <div class="topbar" id="topbar-bar" style="margin:0 0 0;"><span class="topbar-inner" id="topbar-text">خصومات حتى 50% | شحن سريع لجميع المحافظات | استبدال واسترجاع بسهولة | خامات أصلية بأفضل الأسعار | طرق دفع متعددة | عروض حصرية كل أسبوع</span></div>
 
-
-
-  <!-- BANNER -->
-  <section style="margin:0 0 60px;background:linear-gradient(135deg,var(--surface) 0%,var(--surface2) 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:60px 0;text-align:center;">
-    <div class="container">
-
+  <!-- NEW ARRIVALS -->
+  <section class="featured-fullwidth-section" style="padding-top:0;margin-bottom:60px;">
+    <div class="featured-section-header">
+      <div class="section-tag">جديد</div>
+      <h2 class="section-title">وصل حديثًا</h2>
+      <div class="section-line"></div>
     </div>
+    <div class="featured-fullwidth-grid" id="new-arrivals-grid"></div>
   </section>
-
 
   <!-- شاهدت مؤخراً -->
   <section id="recently-viewed-section" style="display:none;padding:40px 0 20px;">
@@ -2172,16 +2350,6 @@ image-rendering:auto;
       </h2>
       <div class="products-grid" id="recently-viewed-grid"></div>
     </div>
-  </section>
-
-  <!-- NEW ARRIVALS -->
-  <section class="featured-fullwidth-section" style="padding-top:0;margin-bottom:60px;">
-    <div class="featured-section-header">
-      <div class="section-tag">جديد</div>
-      <h2 class="section-title">وصل حديثًا</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="featured-fullwidth-grid" id="new-arrivals-grid"></div>
   </section>
 
 </div>
@@ -2302,9 +2470,7 @@ image-rendering:auto;
               </select>
             </div>
             <div class="form-group"><label>المدينة / المركز <span style="color:red">*</span></label>
-              <select id="co-city" style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;">
-                <option value="">اختر أولاً المحافظة</option>
-              </select>
+              <input type="text" id="co-city" placeholder="اكتب اسم المدينة أو المركز..." style="width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;">
             </div>
           </div>
           <div class="form-group"><label>العنوان بالتفصيل <span style="color:red">*</span></label><input type="text" id="co-address" placeholder="الشارع، رقم المبنى، الدور، الشقة..."></div>
@@ -2387,12 +2553,6 @@ image-rendering:auto;
         </div>
       </div>
       <div class="checkout-summary">
-        <!-- خانة رقم حساب العميل فوق الكوبون -->
-        <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;margin-bottom:10px;border-radius:4px;">
-          <div style="font-size:.82rem;font-weight:700;margin-bottom:8px;color:var(--text);"><i class="fas fa-mobile-alt" style="color:var(--gold);margin-left:6px;"></i> محفظة إلكترونية / انستا باي محفظة / انستا باي حساب بنكي</div>
-          <input type="text" id="co-customer-paynum" placeholder="01xxxxxxxxx" style="width:100%;padding:8px 10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.82rem;outline:none;border-radius:2px;box-sizing:border-box;">
-        </div>
-
         <!-- خانة كود الكوبون فوق الملخص -->
         <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px;margin-bottom:10px;border-radius:4px;">
           <div style="font-size:.82rem;font-weight:700;margin-bottom:8px;color:var(--text);"><i class="fas fa-ticket-alt" style="color:var(--gold);margin-left:6px;"></i> Coupon</div>
@@ -2749,104 +2909,79 @@ image-rendering:auto;
     <div style="width:28px;"></div>
   </div>
 
-  <!-- Welcome + Login/Register Buttons -->
+  <!-- ========== GUEST VIEW ========== -->
   <div id="profile-guest-view">
     <div style="padding:20px 20px 0;text-align:right;">
       <p style="font-size:.95rem;color:var(--text-muted);margin-bottom:16px;">مرحبًا بك في ترك فاشون</p>
     </div>
-
-    <!-- Tabs header like the screenshot -->
     <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:0;">
       <button id="tab-btn-register" onclick="showProfileTab('register')" style="flex:1;padding:14px;background:transparent;border:none;border-bottom:2px solid var(--gold);font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;color:var(--text);transition:all 0.3s;">حساب جديد</button>
       <button id="tab-btn-login" onclick="showProfileTab('login')" style="flex:1;padding:14px;background:transparent;border:none;border-bottom:2px solid transparent;font-size:.9rem;font-weight:400;cursor:pointer;font-family:'Cairo',sans-serif;color:var(--text-muted);transition:all 0.3s;">تسجيل الدخول</button>
     </div>
 
-    <!-- Login Form (hidden by default) -->
-    <div id="profile-login-form" style="display:none;padding:0 20px 20px;">
+    <!-- Login Form -->
+    <div id="profile-login-form" style="display:none;padding:20px;">
       <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:20px;text-align:right;">تسجيل الدخول</h3>
-      <div class="form-group"><label>البريد الإلكتروني</label><input type="email" placeholder="example@mail.com" style="width:100%;"></div>
-      <div class="form-group"><label>كلمة المرور</label><input type="password" placeholder="••••••••" style="width:100%;"></div>
-      <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" onclick="doFakeLogin()">دخول</button>
-      <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--text-muted)"><a href="#" style="color:var(--gold)">نسيت كلمة المرور؟</a></p>
+      <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="login-email" placeholder="example@mail.com" style="width:100%;"></div>
+      <div class="form-group" style="position:relative;"><label>كلمة المرور</label>
+        <input type="password" id="login-password" placeholder="••••••••" style="width:100%;padding-left:40px;">
+        <button type="button" onclick="document.getElementById('login-password').type=document.getElementById('login-password').type==='password'?'text':'password'" style="position:absolute;left:10px;bottom:10px;background:none;border:none;cursor:pointer;color:var(--text-muted);"><i class="fas fa-eye"></i></button>
+      </div>
+      <div id="login-error" style="color:#e53935;font-size:.8rem;margin-bottom:8px;display:none;text-align:right;"></div>
+      <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" onclick="doLogin()">
+        <span id="login-btn-text">دخول</span>
+      </button>
+      <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--text-muted)"><a href="#" onclick="showForgotPassword()" style="color:var(--gold)">نسيت كلمة المرور؟</a></p>
       <p style="text-align:center;margin-top:8px;font-size:.8rem;color:var(--text-muted)">ليس لديك حساب؟ <a href="#" onclick="showProfileTab('register')" style="color:var(--gold)">إنشاء حساب</a></p>
     </div>
 
-    <!-- Register Form (hidden by default) -->
-    <div id="profile-register-form" style="display:none;padding:0 20px 24px;">
+    <!-- Forgot Password Form -->
+    <div id="profile-forgot-form" style="display:none;padding:20px;">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;margin-bottom:8px;text-align:right;">استعادة كلمة المرور</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:16px;text-align:right;">أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور.</p>
+      <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="forgot-email" placeholder="example@mail.com" style="width:100%;"></div>
+      <div id="forgot-msg" style="font-size:.8rem;margin-bottom:8px;display:none;text-align:right;"></div>
+      <button class="btn btn-gold" style="width:100%;justify-content:center;" onclick="doForgotPassword()">إرسال رابط الاستعادة</button>
+      <p style="text-align:center;margin-top:12px;font-size:.8rem;"><a href="#" onclick="showProfileTab('login')" style="color:var(--gold)">← العودة لتسجيل الدخول</a></p>
+    </div>
 
-      <!-- Phone -->
-      <div style="border-bottom:1px solid var(--border);padding:12px 0;margin-bottom:0;margin-top:8px;">
+    <!-- Register Form -->
+    <div id="profile-register-form" style="display:none;padding:0 20px 24px;">
+      <div style="border-bottom:1px solid var(--border);padding:12px 0;margin-top:8px;">
+        <input type="text" id="reg-fullname" placeholder="الاسم الكامل" style="width:100%;background:none;border:none;outline:none;color:var(--text);font-size:.95rem;font-family:'Cairo',sans-serif;text-align:right;direction:rtl;">
+      </div>
+      <div style="border-bottom:1px solid var(--border);padding:12px 0;">
         <input type="tel" id="reg-phone" placeholder="الهاتف المحمول" style="width:100%;background:none;border:none;outline:none;color:var(--text);font-size:.95rem;font-family:'Cairo',sans-serif;text-align:right;direction:rtl;">
       </div>
-
-      <!-- Email -->
-      <div style="border-bottom:1px solid var(--border);padding:12px 0;margin-bottom:4px;">
+      <div style="border-bottom:1px solid var(--border);padding:12px 0;">
         <input type="email" id="reg-email" placeholder="البريد الإلكتروني" style="width:100%;background:none;border:none;outline:none;color:var(--text);font-size:.95rem;font-family:'Cairo',sans-serif;text-align:right;direction:rtl;">
       </div>
-
-      <!-- Password -->
-      <div style="border-bottom:1px solid var(--border);padding:12px 0;margin-bottom:8px;position:relative;">
-        <input type="password" id="reg-password" placeholder="كلمة المرور" oninput="checkRegPassword()" style="width:100%;background:none;border:none;outline:none;color:var(--text);font-size:.95rem;font-family:'Cairo',sans-serif;text-align:right;direction:rtl;padding-left:32px;">
-        <button type="button" onclick="toggleRegPass()" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:.9rem;padding:4px;">
-          <i class="far fa-eye" id="reg-pass-eye"></i>
-        </button>
+      <div style="border-bottom:1px solid var(--border);padding:12px 0;position:relative;">
+        <input type="password" id="reg-password" placeholder="كلمة المرور (8 أحرف على الأقل)" oninput="checkRegPassword()" style="width:100%;background:none;border:none;outline:none;color:var(--text);font-size:.95rem;font-family:'Cairo',sans-serif;text-align:right;direction:rtl;padding-left:32px;">
+        <button type="button" onclick="toggleRegPass()" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:.9rem;padding:4px;"><i class="far fa-eye" id="reg-pass-eye"></i></button>
       </div>
-
-      <!-- Password Validators -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-bottom:16px;direction:rtl;">
-        <div id="pv-num" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);">
-          <i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>أدخل رقم واحد على الأقل</span>
-        </div>
-        <div id="pv-upper" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);">
-          <i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>حرف كبير واحد على الأقل</span>
-        </div>
-        <div id="pv-lower" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);">
-          <i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>حرف صغير واحد على الأقل</span>
-        </div>
-        <div id="pv-len" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);">
-          <i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>يجب أن يحتوي على ما بين 8 و 15 حرفاً</span>
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin:12px 0 16px;direction:rtl;">
+        <div id="pv-num" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>رقم واحد على الأقل</span></div>
+        <div id="pv-upper" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>حرف كبير واحد</span></div>
+        <div id="pv-lower" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>حرف صغير واحد</span></div>
+        <div id="pv-len" style="display:flex;align-items:center;gap:5px;font-size:.72rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="font-size:.7rem;"></i><span>من 8 إلى 15 حرفاً</span></div>
       </div>
-
-      <!-- Date of Birth -->
-      <div style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px;">
-        <div style="display:flex;gap:8px;direction:rtl;">
-          <div style="flex:1;position:relative;">
-            <select id="reg-day" style="width:100%;background:var(--surface2);border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.85rem;padding:8px 4px;outline:none;appearance:none;-webkit-appearance:none;text-align:center;">
-              <option value="">اليوم</option>
-            </select>
-            <i class="fas fa-chevron-down" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:.6rem;color:var(--text-muted);pointer-events:none;"></i>
-          </div>
-          <div style="flex:1;position:relative;">
-            <select id="reg-month" style="width:100%;background:var(--surface2);border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.85rem;padding:8px 4px;outline:none;appearance:none;-webkit-appearance:none;text-align:center;">
-              <option value="">الشهر</option>
-              <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option>
-              <option value="4">أبريل</option><option value="5">مايو</option><option value="6">يونيو</option>
-              <option value="7">يوليو</option><option value="8">أغسطس</option><option value="9">سبتمبر</option>
-              <option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
-            </select>
-            <i class="fas fa-chevron-down" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:.6rem;color:var(--text-muted);pointer-events:none;"></i>
-          </div>
-          <div style="flex:1;position:relative;">
-            <select id="reg-year" style="width:100%;background:var(--surface2);border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.85rem;padding:8px 4px;outline:none;appearance:none;-webkit-appearance:none;text-align:center;">
-              <option value="">السنة</option>
-            </select>
-            <i class="fas fa-chevron-down" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:.6rem;color:var(--text-muted);pointer-events:none;"></i>
-          </div>
-        </div>
-      </div>
+      <div id="reg-error" style="color:#e53935;font-size:.8rem;margin-bottom:8px;display:none;text-align:right;"></div>
 
       <!-- Gender -->
-      <div style="display:flex;align-items:center;gap:20px;justify-content:flex-end;margin-bottom:20px;direction:rtl;">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.85rem;">
-          <input type="radio" name="reg-gender" value="male" style="accent-color:var(--gold);">ذكر
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.85rem;">
-          <input type="radio" name="reg-gender" value="female" style="accent-color:var(--gold);">أنثى
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.85rem;">
-          <input type="radio" name="reg-gender" value="none" checked style="accent-color:var(--gold);">أفضل عدم التحديد
-        </label>
+      <div style="margin-bottom:14px;direction:rtl;">
+        <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px;">الجنس</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer;">
+            <input type="radio" name="reg-gender" value="male" style="accent-color:var(--gold);">ذكر
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer;">
+            <input type="radio" name="reg-gender" value="female" style="accent-color:var(--gold);">أنثى
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;cursor:pointer;">
+            <input type="radio" name="reg-gender" value="none" checked style="accent-color:var(--gold);">أفضل عدم التحديد
+          </label>
+        </div>
       </div>
 
       <!-- Newsletter consent -->
@@ -2860,7 +2995,7 @@ image-rendering:auto;
       </div>
 
       <!-- Terms consent -->
-      <div style="background:var(--surface2);border:1px solid var(--border);padding:14px;margin-bottom:20px;border-radius:2px;direction:rtl;">
+      <div style="background:var(--surface2);border:1px solid var(--border);padding:14px;margin-bottom:16px;border-radius:2px;direction:rtl;">
         <div style="display:flex;align-items:flex-start;gap:10px;">
           <div style="flex:1;font-size:.75rem;color:var(--text-muted);line-height:1.7;text-align:right;">
             لقد قرأت وفهمت <a href="#" style="color:var(--gold);font-weight:700;">شروط استخدام الموقع</a> و<a href="#" style="color:var(--gold);font-weight:700;">سياسة الخصوصية</a> "من خلال الضغط على زر تسجيل"
@@ -2869,101 +3004,129 @@ image-rendering:auto;
         </div>
       </div>
 
-      <!-- Submit -->
-      <button onclick="doFakeRegister()" style="width:100%;padding:16px;background:#666;color:#fff;border:none;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;letter-spacing:.05em;transition:background 0.3s;" id="reg-submit-btn">
-        حساب جديد
-      </button>
-
+      <button onclick="doRegister()" style="width:100%;padding:16px;background:var(--gold);color:#000;border:none;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;letter-spacing:.05em;transition:background 0.3s;" id="reg-submit-btn">إنشاء حساب</button>
       <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--text-muted)">لديك حساب؟ <a href="#" onclick="showProfileTab('login')" style="color:var(--gold)">تسجيل الدخول</a></p>
+
+      <!-- Verify Email Notice (shown after register) -->
+      <div id="verify-notice" style="display:none;margin-top:20px;padding:16px;background:rgba(201,168,76,0.1);border:1px solid var(--gold);border-radius:4px;text-align:right;">
+        <i class="fas fa-envelope-open-text" style="color:var(--gold);font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+        <div style="font-weight:700;margin-bottom:10px;font-size:.95rem;">مرحباً بك في Turk Fashion! 🎉</div>
+
+        <div style="font-size:.82rem;line-height:1.8;margin-bottom:12px;">
+          تم إرسال رسالة ترحيب ورابط تفعيل الحساب إلى بريدك الإلكتروني.
+        </div>
+
+        <div style="background:rgba(255,255,255,0.07);border-right:3px solid var(--gold);padding:10px 12px;border-radius:4px;margin-bottom:12px;">
+          <div style="font-weight:700;font-size:.82rem;margin-bottom:6px;">⚠️ لم تجد الرسالة؟</div>
+          <div style="font-size:.78rem;color:var(--text-muted);line-height:1.8;">
+            قد تصل رسائلنا أحياناً إلى مجلد <strong style="color:var(--text);">Spam</strong> أو <strong style="color:var(--text);">الرسائل غير المرغوب فيها</strong> في بريدك. تفقّد المجلد وستجدها هناك.
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.07);border-right:3px solid #81c784;padding:10px 12px;border-radius:4px;margin-bottom:14px;">
+          <div style="font-weight:700;font-size:.82rem;margin-bottom:6px;">✅ نصيحة مهمة</div>
+          <div style="font-size:.78rem;color:var(--text-muted);line-height:1.8;">
+            لضمان وصول رسائلنا (عروض، خصومات، تأكيد طلبات) مباشرةً إلى بريدك الوارد دائماً، أضف <strong style="color:var(--gold);">info@turkfashion.com</strong> إلى جهات اتصالك.
+          </div>
+        </div>
+
+        <button onclick="resendVerificationEmail()" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:'Cairo',sans-serif;border-radius:4px;">إعادة إرسال رابط التفعيل</button>
+      </div>
     </div>
 
-    <!-- Quick Links (always visible when guest) -->
+    <!-- Quick Links -->
     <div id="profile-quick-links" style="padding:0 0 20px;">
       <div style="border-top:8px solid var(--surface2);padding-top:8px;">
-
-        <!-- التقييمات -->
         <div onclick="closeProfilePanel();showPage('reviews');" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
           <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:.9rem;">التقييمات</span>
-            <i class="far fa-star" style="font-size:1.1rem;color:var(--gold);"></i>
-          </div>
+          <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">التقييمات</span><i class="far fa-star" style="font-size:1.1rem;color:var(--gold);"></i></div>
         </div>
-
-        <!-- الطلبات -->
         <div onclick="closeProfilePanel();showMyOrders();" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
           <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:.9rem;">طلباتي</span>
-            <i class="fas fa-box" style="font-size:1.1rem;color:var(--gold);"></i>
-          </div>
+          <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">طلباتي</span><i class="fas fa-box" style="font-size:1.1rem;color:var(--gold);"></i></div>
         </div>
-
-        <!-- المفضلة -->
         <div onclick="closeProfilePanel();openWishlist();" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
           <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:.9rem;">المفضلة</span>
-            <i class="fas fa-heart" style="font-size:1.1rem;color:var(--gold);"></i>
-          </div>
+          <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">المفضلة</span><i class="fas fa-heart" style="font-size:1.1rem;color:var(--gold);"></i></div>
         </div>
-
       </div>
-
-      <!-- Language -->
       <div style="border-top:8px solid var(--surface2);padding-top:8px;">
-        <!-- تعرف علينا -->
         <div onclick="closeProfilePanel();showPage('about');" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
           <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:.9rem;">تعرف علينا</span>
-            <i class="fas fa-award" style="font-size:1.1rem;color:var(--gold);"></i>
-          </div>
+          <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">تعرف علينا</span><i class="fas fa-award" style="font-size:1.1rem;color:var(--gold);"></i></div>
         </div>
-
-        <!-- مساعدة -->
         <div onclick="closeProfilePanel();showPage('contact');" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
           <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:.9rem;">مساعدة</span>
-            <i class="fas fa-question-circle" style="font-size:1.1rem;color:var(--gold);"></i>
-          </div>
+          <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">مساعدة</span><i class="fas fa-question-circle" style="font-size:1.1rem;color:var(--gold);"></i></div>
         </div>
-
-        <!-- تواصل معنا -->
-        <div onclick="closeProfilePanel();showPage('contact');" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
-          <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:.9rem;">تواصل معنا</span>
-            <i class="fas fa-comments" style="font-size:1.1rem;color:var(--gold);"></i>
-          </div>
-        </div>
-
-        <!-- واتساب -->
         <a href="https://wa.me/201024633546" target="_blank" onclick="closeProfilePanel();" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;text-decoration:none;color:inherit;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
           <span style="font-size:.8rem;color:var(--text-muted);">اكتب رسالة</span>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span style="font-size:.9rem;">واتساب</span>
-            <i class="fab fa-whatsapp" style="font-size:1.2rem;color:#25D366;"></i>
-          </div>
+          <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">واتساب</span><i class="fab fa-whatsapp" style="font-size:1.2rem;color:#25D366;"></i></div>
         </a>
-
       </div>
-
-      <!-- خدمة العملاء -->
       <div style="margin:16px 20px 0;background:var(--gold);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-radius:2px;">
         <span style="font-size:.85rem;font-weight:700;color:var(--black);">البحث</span>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-size:.85rem;font-weight:700;color:var(--black);">خدمة العملاء | رقم التليفون</span>
-          <i class="fas fa-headset" style="font-size:1.2rem;color:var(--black);"></i>
-        </div>
+        <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:.85rem;font-weight:700;color:var(--black);">خدمة العملاء | رقم التليفون</span><i class="fas fa-headset" style="font-size:1.2rem;color:var(--black);"></i></div>
       </div>
-
-      <p style="text-align:center;font-size:.7rem;color:var(--text-muted);padding:16px 20px 8px;">الإصدار الحالي: v8.0</p>
+      <p style="text-align:center;font-size:.7rem;color:var(--text-muted);padding:16px 20px 8px;">الإصدار الحالي: v9.0</p>
     </div>
   </div>
-</div>
 
+  <!-- ========== LOGGED IN VIEW ========== -->
+  <div id="profile-user-view" style="display:none;flex:1;flex-direction:column;">
+    <!-- User Header -->
+    <div style="padding:20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,var(--surface2),var(--surface));">
+      <div id="profile-avatar-wrap" style="position:relative;">
+        <div id="profile-avatar" style="width:64px;height:64px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;color:#000;overflow:hidden;border:2px solid var(--gold);">
+          <span id="profile-avatar-initials">؟</span>
+          <img id="profile-avatar-img" src="" style="display:none;width:100%;height:100%;object-fit:cover;">
+        </div>
+      </div>
+      <div style="flex:1;text-align:right;">
+        <div id="profile-display-name" style="font-weight:700;font-size:1rem;margin-bottom:4px;">اسم العميل</div>
+        <div id="profile-display-email" style="font-size:.78rem;color:var(--text-muted);margin-bottom:6px;direction:ltr;text-align:right;"></div>
+        <div id="profile-verify-badge" style="display:none;font-size:.72rem;color:#43a047;"><i class="fas fa-check-circle"></i> تم التحقق</div>
+        <div id="profile-unverify-badge" style="display:none;font-size:.72rem;color:#e53935;cursor:pointer;" onclick="resendVerificationEmail()"><i class="fas fa-exclamation-circle"></i> لم يتم التحقق — اضغط لإعادة الإرسال</div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);">
+      <div style="font-weight:700;font-size:.85rem;margin-bottom:12px;color:var(--gold);"><i class="fas fa-user-edit"></i> تعديل بياناتك</div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <input type="text" id="edit-fullname" placeholder="الاسم الكامل" style="width:100%;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.88rem;">
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <input type="tel" id="edit-phone" placeholder="رقم الهاتف" style="width:100%;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.88rem;direction:ltr;">
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <textarea id="edit-address" placeholder="العنوان الافتراضي للشحن..." style="width:100%;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.88rem;height:64px;resize:none;"></textarea>
+      </div>
+      <button onclick="saveProfileData()" style="width:100%;padding:10px;background:var(--gold);color:#000;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;">حفظ التغييرات</button>
+    </div>
+
+    <!-- User Links -->
+    <div style="flex:1;">
+      <div onclick="closeProfilePanel();showMyOrders();" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+        <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
+        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">طلباتي</span><i class="fas fa-box" style="font-size:1.1rem;color:var(--gold);"></i></div>
+      </div>
+      <div onclick="closeProfilePanel();openWishlist();" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+        <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
+        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">المفضلة</span><i class="fas fa-heart" style="font-size:1.1rem;color:var(--gold);"></i></div>
+      </div>
+      <div onclick="closeProfilePanel();showPage('contact');" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+        <i class="fas fa-chevron-left" style="color:var(--text-muted);font-size:.7rem;"></i>
+        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;">تواصل معنا</span><i class="fas fa-comments" style="font-size:1.1rem;color:var(--gold);"></i></div>
+      </div>
+      <div onclick="doLogout()" style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.2s;" onmouseover="this.style.background='rgba(229,57,53,0.08)'" onmouseout="this.style.background=''">
+        <i class="fas fa-chevron-left" style="color:#e53935;font-size:.7rem;"></i>
+        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:.9rem;color:#e53935;">تسجيل الخروج</span><i class="fas fa-sign-out-alt" style="font-size:1.1rem;color:#e53935;"></i></div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:.7rem;color:var(--text-muted);padding:16px 20px;">الإصدار الحالي: v9.0</p>
+  </div>
+</div>
 <!-- Overlay for profile panel -->
 <div id="profile-overlay" onclick="closeProfilePanel()" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1199;opacity:0;visibility:hidden;transition:all 0.4s;"></div>
 
@@ -3017,6 +3180,10 @@ image-rendering:auto;
         <i class="fas fa-box-open"></i>
         <span>إدارة المنتجات</span>
       </button>
+      <button class="admin-home-btn" onclick="resetProductForm(); openAdminSection('add-product');">
+        <i class="fas fa-plus-circle" style="color:#81c784;"></i>
+        <span>إضافة منتج</span>
+      </button>
       <button class="admin-home-btn" onclick="openAdminSection('categories')">
         <i class="fas fa-tags"></i>
         <span>الأقسام</span>
@@ -3065,6 +3232,22 @@ image-rendering:auto;
         <i class="fas fa-star"></i>
         <span>ريفيوهات العملاء</span>
       </button>
+      <button class="admin-home-btn" onclick="openAdminSection('admin-customers')">
+        <i class="fas fa-users" style="color:#4fc3f7;"></i>
+        <span>إدارة العملاء</span>
+      </button>
+      <button class="admin-home-btn" onclick="openAdminSection('admin-marketing')">
+        <i class="fas fa-envelope-open-text" style="color:#81c784;"></i>
+        <span>الرسائل التسويقية</span>
+      </button>
+      <button class="admin-home-btn" onclick="openAdminSection('admin-sales-stats')">
+        <i class="fas fa-chart-line" style="color:#ffb74d;"></i>
+        <span>إحصائيات المبيعات</span>
+      </button>
+      <button class="admin-home-btn" id="btn-permissions" onclick="openAdminSection('admin-permissions')" style="display:none;">
+        <i class="fas fa-user-shield" style="color:#ce93d8;"></i>
+        <span>الصلاحيات</span>
+      </button>
     </div>
   </div>
 
@@ -3078,9 +3261,6 @@ image-rendering:auto;
             <div class="admin-section-title">إدارة المنتجات</div>
             <div class="admin-subtitle">عدّل أو احذف المنتجات الحالية</div>
           </div>
-          <button class="admin-btn admin-btn-gold" onclick="openAdminSection('add-product')">
-            <i class="fas fa-plus"></i> إضافة منتج
-          </button>
         </div>
         <div style="overflow:auto;max-height:calc(100vh - 200px);border:1px solid var(--border);border-radius:4px;">
           <table style="min-width:700px;border-collapse:collapse;width:100%;">
@@ -3417,7 +3597,12 @@ image-rendering:auto;
         </div>
         <div class="settings-card">
           <h3>نص الشريط العلوي</h3>
-          <div class="form-group"><label>نص الشريط العلوي</label><input type="text" id="setting-topbar" value="🔥 خصم حتى 50% على مجموعة الصيف — اطلب الآن واستمتع بطرق دفع متعددة"></div>
+          <div class="form-group"><label>الشريط الإعلاني (كل سطر إعلان مستقل)</label><textarea id="setting-topbar" rows="4" style="width:100%;resize:vertical;direction:rtl;font-family:inherit;">خصومات حتى 50%
+شحن سريع لجميع المحافظات
+استبدال واسترجاع بسهولة
+خامات أصلية بأفضل الأسعار
+طرق دفع متعددة
+عروض حصرية كل أسبوع</textarea></div>
           <button class="admin-btn admin-btn-gold" onclick="saveTopbar()" style="margin-top:8px;"><i class="fas fa-save"></i> حفظ</button>
         </div>
         <div class="settings-card">
@@ -3723,6 +3908,191 @@ image-rendering:auto;
         <div id="admin-reviews-list" style="display:grid;gap:10px;"></div>
       </div>
 
+      <!-- ===== إدارة العملاء ===== -->
+      <div class="admin-section" id="admin-admin-customers">
+        <div class="admin-section-title">إدارة العملاء</div>
+        <div class="admin-subtitle">عرض وإدارة حسابات العملاء المسجلين عبر Firebase</div>
+
+        <button id="export-emails-btn" onclick="exportCustomerEmailsToWord()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--surface2);border:1px solid var(--gold);color:var(--gold);padding:11px;border-radius:4px;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;margin-bottom:16px;">
+          <i class="fas fa-file-word"></i> تصدير إيميلات العملاء (ملف Word)
+        </button>
+
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+          <input type="text" id="customers-search" placeholder="بحث بالاسم أو الإيميل..." oninput="filterCustomersTable()" style="flex:1;min-width:180px;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.85rem;">
+          <button onclick="loadCustomers()" style="padding:8px 18px;background:var(--gold);border:none;color:#000;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;font-size:.85rem;"><i class="fas fa-sync-alt"></i> تحديث</button>
+        </div>
+        <div id="customers-stats" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px;">
+          <div style="background:var(--surface2);padding:14px;text-align:center;border-radius:4px;">
+            <div id="stat-total-customers" style="font-size:1.5rem;font-weight:700;color:var(--gold);">—</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">إجمالي العملاء المسجلين</div>
+          </div>
+          <div style="background:var(--surface2);padding:14px;text-align:center;border-radius:4px;">
+            <div id="stat-verified-customers" style="font-size:1.5rem;font-weight:700;color:#43a047;">—</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">محققون</div>
+          </div>
+        </div>
+        <div id="customers-stats-2" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+          <div style="background:var(--surface2);padding:14px;text-align:center;border-radius:4px;">
+            <div id="stat-new-customers" style="font-size:1.5rem;font-weight:700;color:#4fc3f7;">—</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">عملاء جدد هذا الشهر</div>
+          </div>
+          <div style="background:var(--surface2);padding:14px;text-align:center;border-radius:4px;">
+            <div id="stat-total-buyers" style="font-size:1.5rem;font-weight:700;color:#e53935;">—</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">إجمالي اللي اشتروا</div>
+          </div>
+          <div style="background:var(--surface2);padding:14px;text-align:center;border-radius:4px;">
+            <div id="stat-total-visitors" style="font-size:1.5rem;font-weight:700;color:#9c27b0;">—</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">إجمالي زوار الموقع</div>
+          </div>
+        </div>
+        <div id="most-viewed-product-box" style="background:var(--surface2);padding:14px;border-radius:4px;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+          <img id="most-viewed-product-img" src="" alt="" style="width:50px;height:65px;object-fit:cover;display:none;">
+          <div>
+            <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:4px;">الأكثر زيارة</div>
+            <div id="most-viewed-product-name" style="font-size:.95rem;font-weight:700;color:var(--gold);">—</div>
+            <div id="most-viewed-product-views" style="font-size:.75rem;color:var(--text-muted);"></div>
+          </div>
+        </div>
+        <div class="admin-table-wrap">
+          <table style="width:100%;border-collapse:collapse;font-size:.82rem;">
+            <thead>
+              <tr style="background:var(--surface2);">
+                <th style="padding:10px 12px;text-align:right;border-bottom:1px solid var(--border);">الاسم</th>
+                <th style="padding:10px 12px;text-align:right;border-bottom:1px solid var(--border);">الإيميل</th>
+                <th style="padding:10px 12px;text-align:right;border-bottom:1px solid var(--border);">الهاتف</th>
+                <th style="padding:10px 12px;text-align:right;border-bottom:1px solid var(--border);">تاريخ التسجيل</th>
+                <th style="padding:10px 12px;text-align:right;border-bottom:1px solid var(--border);">طلبات</th>
+                <th style="padding:10px 12px;text-align:right;border-bottom:1px solid var(--border);">الحالة</th>
+              </tr>
+            </thead>
+            <tbody id="customers-table-body">
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted);">اضغط تحديث لجلب بيانات العملاء</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== الرسائل التسويقية ===== -->
+      <div class="admin-section" id="admin-admin-marketing">
+        <div class="admin-section-title">الرسائل التسويقية</div>
+        <div class="admin-subtitle">إرسال رسائل بريد إلكتروني جماعية للعملاء عبر EmailJS</div>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;border-radius:4px;margin-bottom:16px;">
+          <div style="font-weight:700;font-size:.88rem;margin-bottom:12px;color:var(--gold);"><i class="fas fa-paper-plane"></i> إرسال رسالة جماعية</div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label style="font-size:.82rem;">الفئة المستهدفة</label>
+            <select id="marketing-target" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.85rem;">
+              <option value="all">جميع العملاء المسجلين</option>
+              <option value="verified">العملاء المحققون فقط</option>
+              <option value="new">العملاء الجدد (آخر 30 يوم)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label style="font-size:.82rem;">عنوان الرسالة (Subject)</label>
+            <input type="text" id="marketing-subject" placeholder="مثال: خصم 30% لفترة محدودة!" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.85rem;">
+          </div>
+          <div class="form-group" style="margin-bottom:10px;">
+            <label style="font-size:.82rem;">عنوان الكوبون (اختياري)</label>
+            <input type="text" id="marketing-coupon" placeholder="مثال: SUMMER30" style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.85rem;">
+          </div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label style="font-size:.82rem;">نص الرسالة</label>
+            <textarea id="marketing-body" rows="5" placeholder="اكتب هنا نص الرسالة التسويقية..." style="width:100%;padding:8px 12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;outline:none;font-size:.85rem;resize:vertical;"></textarea>
+          </div>
+          <div id="marketing-send-status" style="font-size:.8rem;margin-bottom:10px;display:none;"></div>
+          <button onclick="sendMarketingEmails()" style="padding:10px 24px;background:var(--gold);border:none;color:#000;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;font-size:.88rem;"><i class="fas fa-paper-plane"></i> إرسال الآن</button>
+        </div>
+
+        <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;border-radius:4px;">
+          <div style="font-weight:700;font-size:.88rem;margin-bottom:12px;color:var(--gold);"><i class="fas fa-history"></i> سجل الرسائل المرسلة</div>
+          <div id="marketing-log" style="font-size:.82rem;color:var(--text-muted);">لا توجد رسائل مرسلة بعد.</div>
+        </div>
+      </div>
+
+      <!-- ===== الصلاحيات ===== -->
+      <div class="admin-section" id="admin-admin-permissions">
+        <div class="admin-section-title">إدارة الصلاحيات</div>
+        <div class="admin-subtitle">إضافة وإدارة حسابات الأدمن وصلاحياتهم</div>
+
+        <!-- إضافة أدمن جديد -->
+        <div style="background:var(--surface2);border-radius:8px;padding:16px;margin-bottom:20px;">
+          <div style="font-weight:700;margin-bottom:12px;color:var(--gold);font-size:.95rem;">➕ إضافة حساب أدمن جديد</div>
+          <input type="email" id="perm-new-email" placeholder="البريد الإلكتروني" style="width:100%;padding:9px 12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.85rem;border-radius:4px;margin-bottom:8px;box-sizing:border-box;">
+          <input type="password" id="perm-new-pass" placeholder="كلمة المرور (6 أحرف على الأقل)" style="width:100%;padding:9px 12px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.85rem;border-radius:4px;margin-bottom:12px;box-sizing:border-box;">
+          <div style="font-weight:700;margin-bottom:8px;font-size:.85rem;">الصلاحيات:</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;" id="perm-checkboxes">
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="products"> إدارة المنتجات</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="categories"> الأقسام</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="slider"> البانر الرئيسي</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="orders"> الطلبات</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="coupons"> الكوبونات</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="shipping"> مناطق الشحن</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="site-settings"> إعدادات الموقع</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="admin-marketing"> الرسائل التسويقية</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="admin-sales-stats"> إحصائيات المبيعات</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="admin-customers"> إدارة العملاء</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="admin-reviews"> الريفيوهات</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="returned-orders"> المرتجعات</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="payment-settings"> إعدادات الدفع</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;background:var(--surface);padding:7px 10px;border-radius:4px;cursor:pointer;"><input type="checkbox" value="about-us"> من نحن</label>
+          </div>
+          <div id="perm-add-msg" style="font-size:.8rem;margin-bottom:8px;display:none;"></div>
+          <button class="admin-btn admin-btn-gold" style="width:100%;justify-content:center;" onclick="addSubAdmin()">
+            <i class="fas fa-user-plus"></i> إضافة حساب
+          </button>
+        </div>
+
+        <!-- قائمة الأدمنز -->
+        <div style="background:var(--surface2);border-radius:8px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div style="font-weight:700;color:var(--gold);font-size:.95rem;">👥 الحسابات الحالية</div>
+            <input type="text" id="perm-filter" placeholder="🔍 بحث بالإيميل..." oninput="renderAdminsList()" style="padding:6px 10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.8rem;border-radius:4px;width:160px;">
+          </div>
+          <div id="admins-list">
+            <div style="text-align:center;color:var(--text-muted);font-size:.85rem;padding:20px;">جاري التحميل...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== إحصائيات المبيعات ===== -->
+      <div class="admin-section" id="admin-admin-sales-stats">
+        <div class="admin-section-title">إحصائيات المبيعات والعملاء</div>
+        <div class="admin-subtitle">تحليل شامل للمبيعات وسلوك العملاء</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;" id="sales-kpi-grid">
+          <div style="background:var(--surface2);padding:16px;border-radius:4px;border-right:3px solid var(--gold);">
+            <div id="kpi-total-revenue" style="font-size:1.4rem;font-weight:700;color:var(--gold);">0 ج</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">إجمالي الإيرادات</div>
+          </div>
+          <div style="background:var(--surface2);padding:16px;border-radius:4px;border-right:3px solid #43a047;">
+            <div id="kpi-total-orders" style="font-size:1.4rem;font-weight:700;color:#43a047;">0</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">إجمالي الطلبات</div>
+          </div>
+          <div style="background:var(--surface2);padding:16px;border-radius:4px;border-right:3px solid #4fc3f7;">
+            <div id="kpi-avg-order" style="font-size:1.4rem;font-weight:700;color:#4fc3f7;">0 ج</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">متوسط قيمة الطلب</div>
+          </div>
+          <div style="background:var(--surface2);padding:16px;border-radius:4px;border-right:3px solid #ffb74d;">
+            <div id="kpi-total-customers-stat" style="font-size:1.4rem;font-weight:700;color:#ffb74d;">0</div>
+            <div style="font-size:.75rem;color:var(--text-muted);">إجمالي العملاء</div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface2);padding:16px;border-radius:4px;margin-bottom:16px;">
+          <div style="font-weight:700;font-size:.88rem;margin-bottom:12px;color:var(--gold);">🏆 أكثر المنتجات مبيعاً</div>
+          <div id="top-products-list" style="font-size:.83rem;color:var(--text-muted);">جاري التحميل...</div>
+        </div>
+
+        <div style="background:var(--surface2);padding:16px;border-radius:4px;margin-bottom:16px;">
+          <div style="font-weight:700;font-size:.88rem;margin-bottom:12px;color:var(--gold);">📦 توزيع الطلبات بالحالة</div>
+          <div id="orders-by-status" style="font-size:.83rem;"></div>
+        </div>
+
+        <div style="background:var(--surface2);padding:16px;border-radius:4px;">
+          <div style="font-weight:700;font-size:.88rem;margin-bottom:12px;color:var(--gold);">🗺️ أكثر المحافظات طلباً</div>
+          <div id="orders-by-gov" style="font-size:.83rem;"></div>
+        </div>
+      </div>
+
   <!-- Admin Toast — رسائل لوحة التحكم تظهر هنا فقط -->
   <div id="admin-toast"></div>
 
@@ -3849,6 +4219,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
+const auth = firebase.auth();
+let currentUser = null;
 
 // ==================== SMART CACHE SYSTEM ====================
 // كاش ذكي يقلل استهلاك Firebase للباقة المجانية
@@ -3955,6 +4327,16 @@ function addToRecentlyViewed(productId) {
   recentlyViewed.unshift(productId);
   recentlyViewed = recentlyViewed.slice(0, 12);
   try { localStorage.setItem('tf_recently_viewed', JSON.stringify(recentlyViewed)); } catch {}
+  trackProductView(productId);
+}
+
+// تسجيل عدد مرات دخول العميل على صفحة المنتج
+function trackProductView(productId) {
+  try {
+    db.collection('products').doc(String(productId)).update({
+      viewCount: firebase.firestore.FieldValue.increment(1)
+    }).catch(() => {});
+  } catch(e) {}
 }
 
 function renderRecentlyViewed() {
@@ -3973,14 +4355,18 @@ function renderRecentlyViewed() {
 // ==================== VERSION-BASED CACHE INVALIDATION ====================
 // يُستخدم لمزامنة الكاش بين أجهزة مختلفة عند تحديث الأدمن
 async function incrementCacheVersion(key) {
+  // نمسح الكاش المحلي فوراً بأي حال — هذا الجهاز يجب أن يرى أحدث بيانات بعد الحفظ
+  TFCache.invalidate(key);
+  localStorage.removeItem('tf_meta_version');
   try {
     const metaRef = db.collection('_meta').doc('cache_version');
     const snap = await metaRef.get();
     const current = snap.exists ? (snap.data()[key + '_v'] || 0) : 0;
     await metaRef.set({ [key + '_v']: current + 1 }, { merge: true });
-    TFCache.invalidate(key);
-    localStorage.removeItem('tf_meta_version');
-  } catch(e) { console.warn('[Cache] Version increment failed for', key, e); }
+  } catch(e) {
+    console.warn('[Cache] Version increment failed for', key, e);
+    showToast('⚠️ تم الحفظ لكن قد يتأخر ظهوره على باقي الأجهزة (تحقق من الاتصال)');
+  }
 }
 
 async function checkCacheVersions() {
@@ -4165,7 +4551,14 @@ function showCachedOrderCounts() {
 function applySettingsLive() {
   // Update topbar
   const topbar = document.getElementById('topbar-text');
-  if (topbar) topbar.textContent = siteData.topbar || '';
+  if (topbar) {
+    let topbarContent = siteData.topbar || '';
+    // If stored as array, join with separator
+    if (Array.isArray(topbarContent)) {
+      topbarContent = topbarContent.join(' | ');
+    }
+    topbar.textContent = topbarContent;
+  }
 
   syncFloatingButtons();
   updateCatDropdown();
@@ -4188,7 +4581,7 @@ function applySettingsLive() {
   setVal('setting-ig',              siteData.instagram);
   setVal('setting-telegram',        siteData.telegram);
   setVal('setting-fb',              siteData.fb_group);
-  setVal('setting-topbar',          siteData.topbar);
+  setVal('setting-topbar',          (siteData.topbar||'').split(' | ').join('\n'));
   setVal('setting-contact-title',   siteData.contact_title);
   setVal('setting-contact-desc',    siteData.contact_desc);
   setVal('setting-contact-whatsapp',siteData.contact_whatsapp);
@@ -4381,32 +4774,58 @@ function startCountdown() {
   }, 1000);
 }
 
-// ==================== CATEGORIES ==================
-function renderNavCategories() {
-  const nav = document.querySelector('.nav-inner');
-  if (!nav) return;
+// ==================== NAV DRAWER ====================
+const NAV_STATIC_LINKS = [
+  { label: 'الرئيسية', action: "showPage('home')" },
+  { label: 'آراء العملاء', action: "showPage('reviews')" },
+  { label: 'من نحن', action: "showPage('about')" },
+  { label: 'تواصل معنا', action: "showPage('contact')" },
+];
 
-  // احذف كل روابط الأقسام الديناميكية
-  nav.querySelectorAll('[data-nav-cat]').forEach(el => el.remove());
-
-  // المرجع — أضف الأقسام بعد رابط "الرئيسية" مباشرة
-  const homeLink = nav.querySelector('[data-nav-static]');
-  const insertAfter = homeLink || null;
-
-  // أضف كل الأقسام من الـ array بالترتيب
-  const reversed = [...categories].reverse();
-  reversed.forEach(cat => {
-    const a = document.createElement('a');
-    a.className = 'nav-link';
-    a.setAttribute('data-nav-cat', 'true');
-    a.textContent = cat.name_ar;
-    a.setAttribute('onclick', `showCategory('${cat.id}')`);
-    if (insertAfter && insertAfter.nextSibling) {
-      nav.insertBefore(a, insertAfter.nextSibling);
-    } else {
-      nav.appendChild(a);
-    }
+function renderNavDrawer() {
+  const cont = document.getElementById('nav-drawer-links');
+  if (!cont) return;
+  // Static: home first
+  let html = `<a class="nav-drawer-link" onclick="showPage('home');closeNavDrawer()">الرئيسية</a>`;
+  // Dynamic categories
+  categories.forEach(cat => {
+    html += `<a class="nav-drawer-link" data-nav-cat onclick="showCategory('${cat.id}');closeNavDrawer()">${cat.name_ar}</a>`;
   });
+  // Rest of static links
+  ['آراء العملاء','من نحن','تواصل معنا'].forEach((label, i) => {
+    const pages = ['reviews','about','contact'];
+    html += `<a class="nav-drawer-link" onclick="showPage('${pages[i]}');closeNavDrawer()">${label}</a>`;
+  });
+  cont.innerHTML = html;
+  // highlight active
+  updateNavDrawerActive();
+}
+
+function updateNavDrawerActive() {
+  document.querySelectorAll('.nav-drawer-link').forEach(l => l.classList.remove('active'));
+}
+
+function openNavDrawer() {
+  renderNavDrawer();
+  lockScroll();
+  document.getElementById('nav-drawer').style.right = '0';
+  const ov = document.getElementById('nav-drawer-overlay');
+  ov.style.opacity = '1'; ov.style.visibility = 'visible';
+}
+
+function closeNavDrawer() {
+  document.getElementById('nav-drawer').style.right = '-320px';
+  const ov = document.getElementById('nav-drawer-overlay');
+  ov.style.opacity = '0'; ov.style.visibility = 'hidden';
+  unlockScroll();
+}
+
+// ==================== CATEGORIES ====================
+function renderNavCategories() {
+  // now just re-renders the drawer links when categories change
+  renderNavDrawer();
+  // also update category filter banner
+  renderCategoryFilter();
 }
 
 // ===== فلتر البانر الرئيسي — يتحدث تلقائياً مع الأقسام =====
@@ -4436,10 +4855,17 @@ function renderCategoryFilter() {
   });
 }
 
+function scrollStrip(id, dir) {
+  const wrap = document.getElementById(id);
+  if (!wrap) return;
+  wrap.scrollBy({ left: dir * 300, behavior: 'smooth' });
+}
+
 function renderCategories() {
   renderCategoryFilter();
   renderNavCategories();
   const grid = document.getElementById('categories-grid');
+  if (!grid) return;
   grid.innerHTML = '';
 
   // Remove any previously injected cat sections
@@ -4480,11 +4906,16 @@ function renderCategories() {
 
     const strip = document.createElement('div');
     strip.className = 'cat-strip-section';
+    const stripId = 'strip-' + cat.id;
     strip.innerHTML = `
-      <div class="cat-products-strip-wrap">
-        <div class="cat-products-strip">
-          ${catProducts.map(makeCard).join('')}
+      <div class="cat-strip-outer">
+        <button class="cat-strip-arrow arrow-right" onclick="scrollStrip('${stripId}',-1)" aria-label="السابق">&#8250;</button>
+        <div class="cat-products-strip-wrap" id="${stripId}">
+          <div class="cat-products-strip">
+            ${catProducts.map(makeCard).join('')}
+          </div>
         </div>
+        <button class="cat-strip-arrow arrow-left" onclick="scrollStrip('${stripId}',1)" aria-label="التالي">&#8249;</button>
       </div>`;
 
     grid.appendChild(strip);
@@ -4530,6 +4961,7 @@ function featuredCard(p, wide = false) {
 
 function renderFeatured() {
   const g = document.getElementById('featured-grid');
+  if (!g) return;
   const featured = products.filter(p => p.featured && p.status === 'active');
   if (!featured.length) {
     g.innerHTML = '<p style="color:var(--text-muted);padding:32px;grid-column:1/-1;">لا توجد منتجات مميزة</p>';
@@ -4544,6 +4976,7 @@ function renderFeatured() {
 }
 function renderNewArrivals() {
   const g = document.getElementById('new-arrivals-grid');
+  if (!g) return;
   const newP = products.filter(p => p.new && p.status === 'active');
   if (!newP.length) { g.innerHTML = '<p style="color:var(--text-muted);padding:32px;grid-column:1/-1;">لا توجد منتجات جديدة</p>'; return; }
   let html = '';
@@ -4555,7 +4988,7 @@ function renderNewArrivals() {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll('.nav-drawer-link').forEach(l => l.classList.remove('active'));
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (id === 'reviews') renderAllReviews();
 }
@@ -4749,24 +5182,45 @@ function updateCartUI() {
       </div>
     </div>`).join('');
 }
+// ── Scroll lock helpers (prevents page jump when panels open) ──
+let _lockScrollY = 0;
+function lockScroll() {
+  _lockScrollY = window.scrollY;
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_lockScrollY}px`;
+  document.body.style.width = '100%';
+}
+function unlockScroll() {
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  window.scrollTo(0, _lockScrollY);
+}
+
 function openCart() {
+  lockScroll();
   document.getElementById('cart-drawer').classList.add('open');
   document.getElementById('overlay').classList.add('show');
 }
 function closeCart() {
   document.getElementById('cart-drawer').classList.remove('open');
   document.getElementById('overlay').classList.remove('show');
+  unlockScroll();
 }
 
 // ==================== ORDERS DRAWER ====================
 function openOrdersDrawer() {
   renderOrdersDrawer();
+  lockScroll();
   document.getElementById('orders-drawer').classList.add('open');
   document.getElementById('overlay').classList.add('show');
 }
 function closeOrdersDrawer() {
   document.getElementById('orders-drawer').classList.remove('open');
   document.getElementById('overlay').classList.remove('show');
+  unlockScroll();
 }
 function renderOrdersDrawer() {
   const body = document.getElementById('orders-drawer-body');
@@ -4896,24 +5350,15 @@ function switchTab(tab) {
 }
 
 // ==================== PROFILE PANEL ====================
+// ==================== FIREBASE AUTH SYSTEM ====================
+
 function openProfilePanel() {
   const panel = document.getElementById('profile-panel');
   const overlay = document.getElementById('profile-overlay');
   panel.style.right = '0';
   overlay.style.opacity = '1';
   overlay.style.visibility = 'visible';
-  document.body.style.overflow = 'hidden';
-  // Reset: hide both forms, reset tab styles, show quick links
-  const loginForm = document.getElementById('profile-login-form');
-  const regForm = document.getElementById('profile-register-form');
-  const btnLogin = document.getElementById('tab-btn-login');
-  const btnReg = document.getElementById('tab-btn-register');
-  const quickLinks = document.getElementById('profile-quick-links');
-  if(loginForm) loginForm.style.display = 'none';
-  if(regForm) regForm.style.display = 'none';
-  if(quickLinks) quickLinks.style.display = 'block';
-  if(btnLogin){ btnLogin.style.borderBottom='2px solid transparent'; btnLogin.style.fontWeight='400'; btnLogin.style.color='var(--text-muted)'; }
-  if(btnReg){ btnReg.style.borderBottom='2px solid transparent'; btnReg.style.fontWeight='400'; btnReg.style.color='var(--text-muted)'; }
+  lockScroll();
 }
 function closeProfilePanel() {
   const panel = document.getElementById('profile-panel');
@@ -4921,49 +5366,758 @@ function closeProfilePanel() {
   panel.style.right = '-100%';
   overlay.style.opacity = '0';
   overlay.style.visibility = 'hidden';
-  document.body.style.overflow = '';
+  unlockScroll();
 }
 function showProfileTab(tab) {
   const loginForm = document.getElementById('profile-login-form');
   const regForm = document.getElementById('profile-register-form');
+  const forgotForm = document.getElementById('profile-forgot-form');
   const btnLogin = document.getElementById('tab-btn-login');
   const btnReg = document.getElementById('tab-btn-register');
   const quickLinks = document.getElementById('profile-quick-links');
-  if (tab === 'login') {
-    loginForm.style.display = 'block';
-    regForm.style.display = 'none';
-    if(quickLinks) quickLinks.style.display = 'none';
+  if(loginForm) loginForm.style.display='none';
+  if(regForm) regForm.style.display='none';
+  if(forgotForm) forgotForm.style.display='none';
+  if(quickLinks) quickLinks.style.display='none';
+  if (tab==='login') {
+    if(loginForm) loginForm.style.display='block';
     if(btnLogin){ btnLogin.style.borderBottom='2px solid var(--gold)'; btnLogin.style.fontWeight='700'; btnLogin.style.color='var(--text)'; }
     if(btnReg){ btnReg.style.borderBottom='2px solid transparent'; btnReg.style.fontWeight='400'; btnReg.style.color='var(--text-muted)'; }
   } else {
-    loginForm.style.display = 'none';
-    regForm.style.display = 'block';
-    if(quickLinks) quickLinks.style.display = 'none';
+    if(regForm) regForm.style.display='block';
     if(btnReg){ btnReg.style.borderBottom='2px solid var(--gold)'; btnReg.style.fontWeight='700'; btnReg.style.color='var(--text)'; }
     if(btnLogin){ btnLogin.style.borderBottom='2px solid transparent'; btnLogin.style.fontWeight='400'; btnLogin.style.color='var(--text-muted)'; }
-    // init day/year selects if empty
-    const dayEl=document.getElementById('reg-day');
-    if(dayEl && dayEl.options.length<2){ for(let d=1;d<=31;d++) dayEl.innerHTML+=`<option value="${d}">${d}</option>`; }
-    const yearEl=document.getElementById('reg-year');
-    if(yearEl && yearEl.options.length<2){ const y=new Date().getFullYear(); for(let yr=y;yr>=1940;yr--) yearEl.innerHTML+=`<option value="${yr}">${yr}</option>`; }
   }
 }
-function doFakeLogin() {
-  showToast('تم تسجيل الدخول بنجاح ✓');
+
+// Auth state listener — runs on every page load
+auth.onAuthStateChanged(async (user) => {
+  currentUser = user;
+  if (user) {
+    // Load user profile from Firestore
+    try {
+      const doc = await db.collection('users').doc(user.uid).get();
+      const data = doc.exists ? doc.data() : {};
+      // Sync wishlist from Firestore
+      if (data.wishlist && Array.isArray(data.wishlist)) {
+        wishlistItems = data.wishlist;
+        localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
+        updateWishlistCount();
+      }
+      renderUserProfile(user, data);
+    } catch(e) {
+      renderUserProfile(user, {});
+    }
+    // Auto-fill checkout if user data available
+    autoFillCheckout();
+  } else {
+    renderGuestView();
+  }
+});
+
+// ===== تحويل أول حرف من الاسم لحرف إنجليزي مناسب للأفاتار =====
+const ARABIC_TO_ENGLISH_MAP = {
+  'ا':'A','أ':'A','إ':'A','آ':'A','ب':'B','ت':'T','ث':'T','ج':'G','ح':'H','خ':'KH',
+  'د':'D','ذ':'D','ر':'R','ز':'Z','س':'S','ش':'SH','ص':'S','ض':'D','ط':'T','ظ':'Z',
+  'ع':'A','غ':'GH','ف':'F','ق':'Q','ك':'K','ل':'L','م':'M','ن':'N','ه':'H','و':'W','ي':'Y','ى':'Y'
+};
+
+function getEnglishInitials(name, email) {
+  const firstChar = (name || '').trim()[0] || '';
+  if (/[A-Za-z]/.test(firstChar)) {
+    // الاسم بالفعل بحرف إنجليزي
+    return name.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  }
+  if (ARABIC_TO_ENGLISH_MAP[firstChar]) {
+    // تحويل أول حرفين عربيين (من كلمتين مختلفتين لو موجودة) لحروفهم الإنجليزية المقابلة
+    const words = (name || '').trim().split(' ').filter(Boolean);
+    const letters = words.slice(0, 2).map(w => ARABIC_TO_ENGLISH_MAP[w[0]] || '').join('');
+    if (letters) return letters.slice(0, 2);
+  }
+  // لو مفيش حرف معروف، نستخدم أول حرف من الإيميل (دايماً إنجليزي/أرقام)
+  return (email || '?')[0].toUpperCase();
+}
+
+function renderUserProfile(user, data) {
+  document.getElementById('profile-guest-view').style.display = 'none';
+  const uv = document.getElementById('profile-user-view');
+  uv.style.display = 'flex';
+
+  const name = data.fullName || user.displayName || 'عميل ترك فاشون';
+  const initials = getEnglishInitials(name, user.email);
+
+  document.getElementById('profile-display-name').textContent = name;
+  document.getElementById('profile-display-email').textContent = user.email;
+  document.getElementById('profile-avatar-initials').textContent = initials;
+
+  // Profile photo
+  const photoUrl = data.photoURL || user.photoURL;
+  if (photoUrl) {
+    const img = document.getElementById('profile-avatar-img');
+    img.src = photoUrl;
+    img.style.display = 'block';
+    document.getElementById('profile-avatar-initials').style.display = 'none';
+  }
+
+  // Verification badge
+  if (user.emailVerified) {
+    document.getElementById('profile-verify-badge').style.display = 'block';
+    document.getElementById('profile-unverify-badge').style.display = 'none';
+  } else {
+    document.getElementById('profile-verify-badge').style.display = 'none';
+    document.getElementById('profile-unverify-badge').style.display = 'block';
+  }
+
+  // Fill edit fields
+  document.getElementById('edit-fullname').value = data.fullName || '';
+  document.getElementById('edit-phone').value = data.phone || '';
+  document.getElementById('edit-address').value = data.address || '';
+
+  // Update header icon
+  const headerBtn = document.getElementById('profile-header-icon');
+  if (headerBtn) {
+    const img = document.createElement('img');
+    img.src = photoUrl || '';
+    if (photoUrl) {
+      headerBtn.innerHTML = `<img src="${photoUrl}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);">`;
+    } else {
+      headerBtn.innerHTML = `<span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--gold);color:#000;font-size:.75rem;font-weight:700;">${initials}</span>`;
+    }
+  }
+}
+
+function renderGuestView() {
+  document.getElementById('profile-guest-view').style.display = 'block';
+  document.getElementById('profile-user-view').style.display = 'none';
+  const headerBtn = document.getElementById('profile-header-icon');
+  if (headerBtn) headerBtn.innerHTML = '<i class="fas fa-user"></i>';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  const btnText = document.getElementById('login-btn-text');
+  if (!email || !pass) { errEl.textContent='أدخل البريد وكلمة المرور'; errEl.style.display='block'; return; }
+  errEl.style.display='none';
+  btnText.textContent = 'جاري الدخول...';
+  try {
+    await auth.signInWithEmailAndPassword(email, pass);
+    showToast('مرحباً بعودتك! ✓');
+    closeProfilePanel();
+  } catch(e) {
+    const msgs = {
+      'auth/user-not-found':'البريد غير مسجل',
+      'auth/wrong-password':'كلمة المرور غير صحيحة',
+      'auth/too-many-requests':'تم تجاوز المحاولات، حاول لاحقاً',
+      'auth/invalid-credential':'بيانات الدخول غير صحيحة'
+    };
+    errEl.textContent = msgs[e.code] || 'خطأ في تسجيل الدخول';
+    errEl.style.display='block';
+  }
+  btnText.textContent = 'دخول';
+}
+
+async function doRegister() {
+  const fullName = document.getElementById('reg-fullname').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-password').value;
+  const errEl = document.getElementById('reg-error');
+  if (!fullName) { errEl.textContent='أدخل اسمك الكامل'; errEl.style.display='block'; return; }
+  if (!email) { errEl.textContent='أدخل البريد الإلكتروني'; errEl.style.display='block'; return; }
+  if (!pass || pass.length < 8) { errEl.textContent='كلمة المرور ضعيفة'; errEl.style.display='block'; return; }
+  errEl.style.display='none';
+  const btn = document.getElementById('reg-submit-btn');
+  btn.textContent = 'جاري الإنشاء...'; btn.disabled = true;
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    const user = cred.user;
+    // Update display name
+    await user.updateProfile({ displayName: fullName });
+    // Send verification email
+    await user.sendEmailVerification();
+    // Save to Firestore
+    await db.collection('users').doc(user.uid).set({
+      uid: user.uid,
+      fullName,
+      email,
+      phone: phone || '',
+      address: '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      wishlist: [],
+      orders: []
+    });
+    // Send welcome email via EmailJS
+    try {
+      await emailjs.send('service_rzvq9ar', 'template_uka7n8n', {
+        email: email,
+        subject: 'أهلاً بك في Turk Fashion',
+        message: `أهلاً ${fullName}،\n\nيسعدنا انضمامك إلى متجر Turk Fashion. نتمنى لك تجربة تسوق ممتعة معنا!`,
+        code: ''
+      });
+    } catch(ejErr) { /* EmailJS optional */ }
+    // Show verify notice
+    document.getElementById('reg-submit-btn').style.display='none';
+    document.getElementById('verify-notice').style.display='block';
+    showToast('تم إنشاء حسابك! تحقق من بريدك ✓');
+  } catch(e) {
+    const msgs = {
+      'auth/email-already-in-use':'البريد مستخدم بالفعل',
+      'auth/invalid-email':'بريد إلكتروني غير صحيح',
+      'auth/weak-password':'كلمة المرور ضعيفة'
+    };
+    errEl.textContent = msgs[e.code] || 'خطأ في إنشاء الحساب';
+    errEl.style.display='block';
+  }
+  btn.textContent = 'إنشاء حساب'; btn.disabled = false;
+}
+
+async function doLogout() {
+  await auth.signOut();
+  wishlistItems = [];
+  localStorage.removeItem('wishlistItems');
+  updateWishlistCount();
+  showToast('تم تسجيل الخروج');
   closeProfilePanel();
 }
-function doFakeRegister() {
-  const phone = document.getElementById('reg-phone')?.value.trim();
-  const email = document.getElementById('reg-email')?.value.trim();
-  const pass = document.getElementById('reg-password')?.value;
-  const terms = document.getElementById('reg-terms')?.checked;
-  if(!phone){ showToast('من فضلك أدخل رقم الهاتف'); return; }
-  if(email && !/^[^@]+@[^@]+\.[^@]+$/.test(email)){ showToast('البريد الإلكتروني غير صحيح'); return; }
-  if(!pass || pass.length<8){ showToast('كلمة المرور غير مكتملة'); return; }
-  if(!terms){ showToast('يجب الموافقة على شروط الاستخدام'); return; }
-  showToast('تم إنشاء الحساب بنجاح ✓');
-  closeProfilePanel();
+
+function showForgotPassword() {
+  document.getElementById('profile-login-form').style.display='none';
+  document.getElementById('profile-forgot-form').style.display='block';
 }
+
+async function doForgotPassword() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const msgEl = document.getElementById('forgot-msg');
+  if (!email) { msgEl.textContent='أدخل بريدك الإلكتروني'; msgEl.style.color='#e53935'; msgEl.style.display='block'; return; }
+  try {
+    await auth.sendPasswordResetEmail(email);
+    msgEl.textContent='✓ تم إرسال رابط الاستعادة، تحقق من بريدك';
+    msgEl.style.color='#43a047';
+    msgEl.style.display='block';
+  } catch(e) {
+    msgEl.textContent = e.code==='auth/user-not-found' ? 'البريد غير مسجل' : 'حدث خطأ، حاول مجدداً';
+    msgEl.style.color='#e53935';
+    msgEl.style.display='block';
+  }
+}
+
+async function resendVerificationEmail() {
+  if (!auth.currentUser) return;
+  try {
+    await auth.currentUser.sendEmailVerification();
+    showToast('تم إعادة إرسال رابط التحقق ✓');
+  } catch(e) { showToast('حاول مرة أخرى لاحقاً'); }
+}
+
+async function saveProfileData() {
+  if (!currentUser) return;
+  const fullName = document.getElementById('edit-fullname').value.trim();
+  const phone = document.getElementById('edit-phone').value.trim();
+  const address = document.getElementById('edit-address').value.trim();
+  try {
+    await db.collection('users').doc(currentUser.uid).update({ fullName, phone, address });
+    await currentUser.updateProfile({ displayName: fullName });
+    showToast('تم حفظ بياناتك ✓');
+    document.getElementById('profile-display-name').textContent = fullName;
+  } catch(e) { showToast('خطأ في الحفظ، حاول مجدداً'); }
+}
+
+
+
+function autoFillCheckout() {
+  if (!currentUser) return;
+  db.collection('users').doc(currentUser.uid).get().then(doc => {
+    if (!doc.exists) return;
+    const d = doc.data();
+    const nm = document.getElementById('co-name'); if (nm && !nm.value) nm.value = d.fullName||'';
+    const ph = document.getElementById('co-phone'); if (ph && !ph.value) ph.value = d.phone||'';
+    const wh = document.getElementById('co-whatsapp'); if (wh && !wh.value) wh.value = d.phone||'';
+    const em = document.getElementById('co-email'); if (em && !em.value) em.value = d.email||'';
+    const ad = document.getElementById('co-address'); if (ad && !ad.value) ad.value = d.address||'';
+  }).catch(()=>{});
+}
+
+// ==================== WISHLIST SYNC WITH FIRESTORE ====================
+async function syncWishlistToFirestore() {
+  if (!currentUser) return;
+  try {
+    await db.collection('users').doc(currentUser.uid).update({
+      wishlist: wishlistItems.map(i => ({ id: i.id||i.name, name: i.name, price: i.price, img: i.img||i.image||'' }))
+    });
+  } catch(e) { /* silent */ }
+}
+
+// ==================== ADMIN: CUSTOMERS ====================
+let allCustomers = [];
+async function loadCustomers() {
+  const tbody = document.getElementById('customers-table-body');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</td></tr>';
+  try {
+    const snap = await db.collection('users').orderBy('createdAt','desc').get();
+    allCustomers = snap.docs.map(d => d.data());
+    const now = new Date();
+    const thisMonth = allCustomers.filter(c => {
+      if (!c.createdAt) return false;
+      const d = c.createdAt.toDate ? c.createdAt.toDate() : new Date(c.createdAt);
+      return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+    });
+    document.getElementById('stat-total-customers').textContent = allCustomers.length;
+    document.getElementById('stat-verified-customers').textContent = '—';
+    document.getElementById('stat-new-customers').textContent = thisMonth.length;
+    renderCustomersTable(allCustomers);
+    loadMostViewedProduct();
+    loadTotalBuyers();
+    loadVisitorCount();
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:#e53935;">خطأ في جلب البيانات: ${e.message}</td></tr>`;
+  }
+}
+// إجمالي العملاء اللي اشتروا فعلياً (بناءً على عدد العملاء الفريدين في الطلبات)
+function loadTotalBuyers() {
+  const el = document.getElementById('stat-total-buyers');
+  if (!el) return;
+  const uniqueBuyers = new Set();
+  ordersLog.forEach(o => {
+    const key = (o.email && o.email.trim()) || (o.phone && o.phone.trim());
+    if (key) uniqueBuyers.add(key.toLowerCase());
+  });
+  el.textContent = uniqueBuyers.size;
+}
+
+// إجمالي زوار الموقع (عداد عام مخزن في _meta/site_stats)
+async function loadVisitorCount() {
+  const el = document.getElementById('stat-total-visitors');
+  if (!el) return;
+  try {
+    const snap = await db.collection('_meta').doc('site_stats').get();
+    const count = snap.exists ? (snap.data().visitorCount || 0) : 0;
+    el.textContent = count.toLocaleString();
+  } catch(e) {
+    el.textContent = '—';
+  }
+}
+
+// أكثر منتج تمت زيارته (بناءً على viewCount المخزن في Firestore)
+function loadMostViewedProduct() {
+  const nameEl = document.getElementById('most-viewed-product-name');
+  const viewsEl = document.getElementById('most-viewed-product-views');
+  const imgEl = document.getElementById('most-viewed-product-img');
+  if (!nameEl) return;
+  const sorted = [...products].filter(p => (p.viewCount || 0) > 0)
+    .sort((a,b) => (b.viewCount||0) - (a.viewCount||0));
+  if (!sorted.length) {
+    nameEl.textContent = 'لا توجد بيانات حتى الآن';
+    viewsEl.textContent = '';
+    imgEl.style.display = 'none';
+    return;
+  }
+  const top = sorted[0];
+  nameEl.textContent = top.name;
+  viewsEl.textContent = (top.viewCount || 0).toLocaleString() + ' زيارة';
+  if (top.img) { imgEl.src = top.img; imgEl.style.display = 'block'; }
+  else imgEl.style.display = 'none';
+}
+
+function renderCustomersTable(customers) {
+  const tbody = document.getElementById('customers-table-body');
+  if (!customers.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted);">لا يوجد عملاء</td></tr>';
+    return;
+  }
+  tbody.innerHTML = customers.map(c => {
+    const date = c.createdAt ? (c.createdAt.toDate ? c.createdAt.toDate().toLocaleDateString('ar-EG') : c.createdAt) : '—';
+    const orders = (c.orders||[]).length;
+    return `<tr>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);">${c.fullName||'—'}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);direction:ltr;font-size:.78rem;">${c.email||'—'}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);direction:ltr;">${c.phone||'—'}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);font-size:.78rem;">${date}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);text-align:center;">${orders}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);"><span style="color:#43a047;font-size:.75rem;">✓ مسجل</span></td>
+    </tr>`;
+  }).join('');
+}
+function filterCustomersTable() {
+  const q = document.getElementById('customers-search').value.toLowerCase();
+  const filtered = allCustomers.filter(c =>
+    (c.fullName||'').toLowerCase().includes(q) ||
+    (c.email||'').toLowerCase().includes(q) ||
+    (c.phone||'').includes(q)
+  );
+  renderCustomersTable(filtered);
+}
+
+// ==================== ADMIN: MARKETING ====================
+let marketingLog = [];
+// ==================== EXPORT CUSTOMER EMAILS TO WORD ====================
+async function exportCustomerEmailsToWord() {
+  const btn = document.getElementById('export-emails-btn');
+  const originalHtml = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التصدير...';
+  btn.disabled = true;
+  try {
+    const snap = await db.collection('users').get();
+    const emails = snap.docs
+      .map(d => d.data().email)
+      .filter(Boolean);
+
+    if (!emails.length) {
+      showToast('⚠️ لا يوجد عملاء مسجلين لتصديرهم');
+      return;
+    }
+
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
+
+    const doc = new Document({
+      styles: {
+        default: { document: { run: { font: "Arial", size: 24 } } }
+      },
+      sections: [{
+        properties: {
+          page: {
+            size: { width: 12240, height: 15840 },
+            margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 }
+          }
+        },
+        children: [
+          new Paragraph({
+            heading: HeadingLevel.HEADING_1,
+            children: [new TextRun({ text: "Turk Fashion - Customer Emails", bold: true })]
+          }),
+          new Paragraph({
+            children: [new TextRun({ text: `Total: ${emails.length} emails`, italics: true, color: "666666" })],
+            spacing: { after: 300 }
+          }),
+          ...emails.map((email, i) =>
+            new Paragraph({
+              children: [new TextRun(`${i + 1}. ${email}`)],
+              spacing: { after: 100 }
+            })
+          )
+        ]
+      }]
+    });
+
+    const blob = await Packer.toBlob(doc);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Turk-Fashion-Customer-Emails-${new Date().toISOString().slice(0,10)}.docx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast(`✅ تم تصدير ${emails.length} إيميل بنجاح`);
+  } catch(e) {
+    console.error('[Export Emails Error]', e);
+    showToast('❌ فشل التصدير: ' + (e.message || 'خطأ غير معروف'));
+  } finally {
+    btn.innerHTML = originalHtml;
+    btn.disabled = false;
+  }
+}
+
+async function sendMarketingEmails() {
+  const target = document.getElementById('marketing-target').value;
+  const subject = document.getElementById('marketing-subject').value.trim();
+  const body = document.getElementById('marketing-body').value.trim();
+  const coupon = document.getElementById('marketing-coupon').value.trim();
+  const statusEl = document.getElementById('marketing-send-status');
+  if (!subject || !body) { showToast('أدخل العنوان والنص'); return; }
+  statusEl.style.display='block';
+  statusEl.style.color='var(--gold)';
+  statusEl.textContent='⏳ جاري جلب العملاء...';
+  try {
+    const snap = await db.collection('users').get();
+    let recipients = snap.docs.map(d=>d.data());
+    if (target==='new') {
+      const month = new Date().getMonth();
+      recipients = recipients.filter(c => c.createdAt && (c.createdAt.toDate?c.createdAt.toDate():new Date(c.createdAt)).getMonth()===month);
+    }
+    let sent=0, failed=0, firstErrorMsg='';
+    for (const c of recipients) {
+      if (!c.email) continue;
+      statusEl.textContent = `⏳ جاري الإرسال... ${sent+failed+1}/${recipients.length}`;
+      try {
+        const fullMessage = body + (coupon ? `\n\nكود الخصم: ${coupon}` : '');
+        await emailjs.send('service_rzvq9ar', 'template_uka7n8n', {
+          email: c.email,
+          subject,
+          message: fullMessage,
+          code: coupon || ''
+        });
+        sent++;
+      } catch(e) {
+        failed++;
+        if (!firstErrorMsg) {
+          firstErrorMsg = (e && (e.text || e.message)) ? (e.text || e.message) : JSON.stringify(e);
+          console.error('[Marketing Email Error]', e);
+        }
+      }
+      await new Promise(r=>setTimeout(r,300)); // rate limit protection
+    }
+    const logEntry = { date: new Date().toLocaleString('ar-EG'), subject, sent, failed, target };
+    marketingLog.unshift(logEntry);
+    renderMarketingLog();
+    if (sent > 0) {
+      statusEl.style.color='#43a047';
+      statusEl.textContent=`✓ تم الإرسال: ${sent} نجح، ${failed} فشل`;
+      showToast(`✓ تم إرسال ${sent} رسالة`);
+    } else {
+      statusEl.style.color='#e53935';
+      statusEl.textContent = `❌ فشل الإرسال بالكامل (${failed} فشل). السبب: ${firstErrorMsg || 'غير معروف'}`;
+      showToast('❌ فشل إرسال جميع الرسائل — راجع تفاصيل الخطأ بالأسفل');
+    }
+  } catch(e) {
+    statusEl.style.color='#e53935';
+    statusEl.textContent='خطأ: '+e.message;
+  }
+}
+
+// ==================== PERMISSIONS SYSTEM ====================
+const MAIN_ADMIN_EMAIL = 'Turk.fashion2000@gmail.com';
+let currentAdminPerms = null; // null = superadmin, array = sub-admin permissions
+
+async function loadAdminPermissions(email) {
+  if (!email || email.toLowerCase() === MAIN_ADMIN_EMAIL.toLowerCase()) {
+    currentAdminPerms = null; // superadmin - all permissions
+    document.getElementById('btn-permissions').style.display = 'flex';
+    return;
+  }
+  try {
+    const doc = await db.collection('admins').doc(email.toLowerCase()).get();
+    if (doc.exists) {
+      currentAdminPerms = doc.data().permissions || [];
+    } else {
+      currentAdminPerms = [];
+    }
+    document.getElementById('btn-permissions').style.display = 'none';
+  } catch(e) {
+    currentAdminPerms = [];
+  }
+}
+
+function applyAdminPermissions() {
+  if (currentAdminPerms === null) {
+    // superadmin - show everything
+    document.querySelectorAll('.admin-home-btn').forEach(btn => btn.style.display = 'flex');
+    document.getElementById('btn-permissions').style.display = 'flex';
+    return;
+  }
+  // sub-admin - show only permitted sections
+  const allBtns = document.querySelectorAll('.admin-home-btn[onclick]');
+  allBtns.forEach(btn => {
+    const onclick = btn.getAttribute('onclick') || '';
+    const match = onclick.match(/openAdminSection\('([^']+)'\)/);
+    if (match) {
+      const section = match[1];
+      btn.style.display = currentAdminPerms.includes(section) ? 'flex' : 'none';
+    }
+  });
+  document.getElementById('btn-permissions').style.display = 'none';
+}
+
+async function addSubAdmin() {
+  const email = document.getElementById('perm-new-email').value.trim().toLowerCase();
+  const pass = document.getElementById('perm-new-pass').value;
+  const msgEl = document.getElementById('perm-add-msg');
+  const checkboxes = document.querySelectorAll('#perm-checkboxes input[type=checkbox]:checked');
+  const permissions = Array.from(checkboxes).map(c => c.value);
+
+  if (!email || !pass) {
+    msgEl.style.display = 'block'; msgEl.style.color = '#e53935';
+    msgEl.textContent = '⚠️ أدخل البريد الإلكتروني وكلمة المرور';
+    return;
+  }
+  if (pass.length < 6) {
+    msgEl.style.display = 'block'; msgEl.style.color = '#e53935';
+    msgEl.textContent = '⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+    return;
+  }
+  if (permissions.length === 0) {
+    msgEl.style.display = 'block'; msgEl.style.color = '#e53935';
+    msgEl.textContent = '⚠️ اختر صلاحية واحدة على الأقل';
+    return;
+  }
+
+  msgEl.style.display = 'block'; msgEl.style.color = 'var(--gold)';
+  msgEl.textContent = '⏳ جاري الإنشاء...';
+
+  try {
+    // Save to Firestore first (with current auth)
+    await db.collection('admins').doc(email).set({
+      email,
+      permissions,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdBy: auth.currentUser?.email || MAIN_ADMIN_EMAIL
+    });
+
+    // Create Firebase Auth user using REST API (doesn't sign out current user)
+    const apiKey = 'AIzaSyA6ACh8noBXJILzTEsXHfF0Whtmmi9c8E4';
+    const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass, returnSecureToken: false })
+    });
+    const data = await res.json();
+    if (data.error) {
+      if (data.error.message === 'EMAIL_EXISTS') {
+        // User already exists in Auth, just update Firestore permissions
+        msgEl.style.color = '#43a047';
+        msgEl.textContent = '✅ تم تحديث صلاحيات الحساب بنجاح';
+      } else {
+        throw new Error(data.error.message);
+      }
+    } else {
+      msgEl.style.color = '#43a047';
+      msgEl.textContent = '✅ تم إنشاء الحساب وحفظ الصلاحيات بنجاح';
+    }
+
+    // Reset form
+    document.getElementById('perm-new-email').value = '';
+    document.getElementById('perm-new-pass').value = '';
+    document.querySelectorAll('#perm-checkboxes input[type=checkbox]').forEach(c => c.checked = false);
+    renderAdminsList();
+  } catch(e) {
+    msgEl.style.color = '#e53935';
+    msgEl.textContent = '❌ خطأ: ' + (e.message || 'حاول مرة أخرى');
+  }
+}
+
+async function renderAdminsList() {
+  const listEl = document.getElementById('admins-list');
+  if (!listEl) return;
+  const filter = (document.getElementById('perm-filter')?.value || '').toLowerCase();
+  listEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:.85rem;padding:20px;"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div>';
+  try {
+    const snap = await db.collection('admins').get();
+    let admins = snap.docs.map(d => d.data());
+    if (filter) admins = admins.filter(a => a.email?.includes(filter));
+    if (!admins.length) {
+      listEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:.85rem;padding:20px;">لا توجد حسابات بعد</div>';
+      return;
+    }
+    const permLabels = {
+      'products':'المنتجات','categories':'الأقسام','slider':'البانر',
+      'orders':'الطلبات','coupons':'الكوبونات','shipping':'الشحن',
+      'site-settings':'إعدادات الموقع','admin-marketing':'التسويق',
+      'admin-sales-stats':'الإحصائيات','admin-customers':'العملاء',
+      'admin-reviews':'الريفيوهات','returned-orders':'المرتجعات',
+      'payment-settings':'الدفع','about-us':'من نحن'
+    };
+    listEl.innerHTML = admins.map(a => `
+      <div style="background:var(--surface);border-radius:6px;padding:12px;margin-bottom:10px;border:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-weight:700;font-size:.85rem;word-break:break-all;">${a.email}</div>
+          <button onclick="deleteSubAdmin('${a.email}')" style="background:#e53935;border:none;color:#fff;padding:4px 8px;border-radius:4px;font-size:.75rem;cursor:pointer;font-family:'Cairo',sans-serif;flex-shrink:0;margin-right:6px;">
+            <i class="fas fa-trash"></i> حذف
+          </button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">
+          ${(a.permissions||[]).map(p => `<span style="background:var(--gold);color:#000;padding:2px 7px;border-radius:3px;font-size:.72rem;font-weight:700;">✓ ${permLabels[p]||p}</span>`).join('')}
+        </div>
+        <button onclick="editSubAdmin('${a.email}', ${JSON.stringify(a.permissions||[]).replace(/"/g,"'")})" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 12px;border-radius:4px;font-size:.78rem;cursor:pointer;font-family:'Cairo',sans-serif;width:100%;">
+          <i class="fas fa-edit"></i> تعديل الصلاحيات
+        </button>
+      </div>
+    `).join('');
+  } catch(e) {
+    listEl.innerHTML = '<div style="color:#e53935;font-size:.85rem;padding:10px;">❌ خطأ في التحميل: ' + e.message + '</div>';
+  }
+}
+
+async function deleteSubAdmin(email) {
+  if (!confirm(`هل أنت متأكد من حذف حساب ${email}؟`)) return;
+  try {
+    await db.collection('admins').doc(email).delete();
+    showToast('✅ تم حذف الحساب من قائمة الأدمنز');
+    renderAdminsList();
+  } catch(e) {
+    showToast('❌ خطأ: ' + e.message);
+  }
+}
+
+function editSubAdmin(email, permissions) {
+  document.getElementById('perm-new-email').value = email;
+  document.getElementById('perm-new-pass').value = '';
+  const permsArray = typeof permissions === 'string' ? permissions.replace(/'/g,'"') : permissions;
+  const permsArr = Array.isArray(permsArray) ? permsArray : JSON.parse(permsArray);
+  document.querySelectorAll('#perm-checkboxes input[type=checkbox]').forEach(cb => {
+    cb.checked = permsArr.includes(cb.value);
+  });
+  const msgEl = document.getElementById('perm-add-msg');
+  msgEl.style.display = 'block'; msgEl.style.color = 'var(--gold)';
+  msgEl.textContent = '⚠️ وضع التعديل - اترك كلمة المرور فارغة للإبقاء عليها، أو أدخل كلمة مرور جديدة';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+// ==================== END PERMISSIONS SYSTEM ====================
+
+function renderMarketingLog() {
+  const el = document.getElementById('marketing-log');
+  if (!marketingLog.length) { el.textContent='لا توجد رسائل مرسلة بعد.'; return; }
+  el.innerHTML = marketingLog.map(l=>`
+    <div style="padding:10px;background:var(--surface);border-radius:3px;margin-bottom:8px;">
+      <div style="font-weight:600;font-size:.83rem;">${l.subject}</div>
+      <div style="font-size:.75rem;color:var(--text-muted);">${l.date} — نجح: ${l.sent} | فشل: ${l.failed}</div>
+    </div>
+  `).join('');
+}
+
+// ==================== ADMIN: SALES STATS ====================
+function loadSalesStats() {
+  const orders = ordersLog || [];
+  const revenue = orders.reduce((s,o)=>s+(o.total||0),0);
+  const avg = orders.length ? Math.round(revenue/orders.length) : 0;
+  document.getElementById('kpi-total-revenue').textContent = revenue.toLocaleString('ar-EG')+' ج';
+  document.getElementById('kpi-total-orders').textContent = orders.length;
+  document.getElementById('kpi-avg-order').textContent = avg.toLocaleString('ar-EG')+' ج';
+  // Customers count
+  db.collection('users').get().then(s=>{
+    document.getElementById('kpi-total-customers-stat').textContent = s.size;
+    document.getElementById('stat-total-customers').textContent = s.size;
+  }).catch(()=>{});
+  // Top products
+  const productCount = {};
+  orders.forEach(o=>(o.items||[]).forEach(i=>{
+    const n=i.productName||i.product?.name||'منتج';
+    productCount[n]=(productCount[n]||0)+(i.qty||1);
+  }));
+  const topProds = Object.entries(productCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.getElementById('top-products-list').innerHTML = topProds.length
+    ? topProds.map(([n,q],i)=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);"><span>${i+1}. ${n}</span><span style="color:var(--gold);font-weight:700;">${q} وحدة</span></div>`).join('')
+    : '<span style="color:var(--text-muted);">لا توجد بيانات</span>';
+  // Orders by status
+  const statusCount = {};
+  orders.forEach(o=>{ const s=o.trackingStatus||o.status||'جديد'; statusCount[s]=(statusCount[s]||0)+1; });
+  document.getElementById('orders-by-status').innerHTML = Object.entries(statusCount)
+    .map(([s,c])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>${s}</span><span style="font-weight:700;color:var(--gold);">${c}</span></div>`).join('');
+  // By gov
+  const govCount = {};
+  orders.forEach(o=>{ const g=o.gov||'غير محدد'; govCount[g]=(govCount[g]||0)+1; });
+  const topGovs = Object.entries(govCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  document.getElementById('orders-by-gov').innerHTML = topGovs
+    .map(([g,c])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);"><span>${g}</span><span style="font-weight:700;color:var(--gold);">${c}</span></div>`).join('');
+}
+
+// ==================== ORDER EMAIL NOTIFICATION ====================
+async function sendOrderEmail(order) {
+  if (!currentUser || !currentUser.email) return;
+  try {
+    await emailjs.send('service_rzvq9ar','template_uka7n8n',{
+      email: currentUser.email,
+      subject: 'تأكيد طلبك رقم ' + order.id,
+      message: `مرحباً ${order.name}،\n\nتم استلام طلبك بنجاح.\n\nرقم الطلب: ${order.id}\nإجمالي الطلب: ${order.total} جنيه\nالعربون المدفوع: ${order.deposit} جنيه\n\nشكراً لتسوقك معنا.`,
+      code: ''
+    });
+  } catch(e){/* silent */}
+}
+
+// ==================== OLD FAKE FUNCTIONS (kept for safety) ====================
+function doFakeLogin() { showProfileTab('login'); }
+function doFakeRegister() { doRegister(); }
 
 // ==================== WISHLIST ====================
 let wishlistItems = JSON.parse(localStorage.getItem('wishlistItems') || '[]');
@@ -4994,6 +6148,7 @@ function toggleWishlistItem() {
   }
   localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
   updateWishlistCount();
+  syncWishlistToFirestore();
 }
 
 function openWishlist() {
@@ -5003,7 +6158,7 @@ function openWishlist() {
   panel.style.right = '0';
   overlay.style.opacity = '1';
   overlay.style.visibility = 'visible';
-  document.body.style.overflow = 'hidden';
+  lockScroll();
 }
 function closeWishlist() {
   const panel = document.getElementById('wishlist-panel');
@@ -5011,7 +6166,7 @@ function closeWishlist() {
   panel.style.right = '-100%';
   overlay.style.opacity = '0';
   overlay.style.visibility = 'hidden';
-  document.body.style.overflow = '';
+  unlockScroll();
 }
 function renderWishlistItems() {
   const container = document.getElementById('wishlist-items');
@@ -5043,6 +6198,7 @@ function removeFromWishlist(i) {
   updateWishlistCount();
   renderWishlistItems();
   showToast('تم الحذف من المفضلة');
+  syncWishlistToFirestore();
 }
 function addWishlistItemToCart(i) {
   const item = wishlistItems[i];
@@ -5129,10 +6285,8 @@ function toggleLanguage() {
   document.documentElement.lang = currentLang;
   const btn = document.getElementById('lang-toggle-btn');
   if (btn) btn.textContent = t.lang_btn;
-  // Nav links
-  const navLinks = document.querySelectorAll('.nav-link');
-  const navKeys = ['nav_home','nav_accessories','nav_women','nav_men','nav_reviews','nav_about','nav_orders','nav_contact'];
-  navLinks.forEach((el, i) => { if (navKeys[i]) el.textContent = t[navKeys[i]]; });
+  // Nav drawer re-renders with current categories
+  renderNavDrawer();
   // Search placeholder
   const si = document.getElementById('search-input');
   if (si) si.placeholder = t.search_placeholder;
@@ -5243,6 +6397,11 @@ function closeAdmin() {
   document.body.classList.remove('admin-open');
   document.body.style.top = '';
   window.scrollTo(0, _scrollY);
+  // تسجيل خروج تلقائي من حساب الأدمن بعد إغلاق اللوحة، لمنع ظهور بياناته كـ"عميل مسجل دخول"
+  // على باقي صفحات الموقع، وحماية الجهاز في حال استخدمه شخص آخر بعدك.
+  if (auth.currentUser) {
+    auth.signOut().catch(()=>{});
+  }
 }
 
 // ==================== ADMIN NAVIGATION ====================
@@ -5254,7 +6413,11 @@ const sectionTitles = {
   'admin-reviews':'ريفيوهات العملاء','about-us':'من نحن',
   'deleted-orders':'الطلبات المحذوفة',
   'returned-orders':'سجل المرتجعات',
-  'cancelled-orders':'الطلبات الملغاة'
+  'cancelled-orders':'الطلبات الملغاة',
+  'admin-customers':'إدارة العملاء',
+  'admin-marketing':'الرسائل التسويقية',
+  'admin-sales-stats':'إحصائيات المبيعات والعملاء',
+  'admin-permissions':'إدارة الصلاحيات'
 };
 
 function openAdminSection(id) {
@@ -5355,6 +6518,9 @@ function openAdminSection(id) {
   if (id === 'about-us') loadAboutUsInputs();
   if (id === 'payment-settings') renderPaymentMethodsList();
   if (id === 'coupons') renderCouponsAdmin();
+  if (id === 'admin-customers') loadCustomers();
+  if (id === 'admin-sales-stats') loadSalesStats();
+  if (id === 'admin-permissions') { renderAdminsList(); }
   if (id === 'site-settings') {
     // load current extra discount value into select
     const sel = document.getElementById('setting-extra-discount-pct');
@@ -5377,11 +6543,14 @@ function showAdminSection(id, el) { openAdminSection(id); }
 function changePwFromSection() {
   const newPw = document.getElementById('new-pw-input2').value;
   if (newPw.length < 6) { showToast('⚠️ 6 أحرف على الأقل'); return; }
-  adminPassword = newPw;
-  localStorage.setItem('adminPw', newPw);
-  showToast('✅ تم تغيير كلمة المرور');
-  document.getElementById('new-pw-input2').value = '';
-  dimSaveBtn(document.querySelector('#admin-admin-pw .admin-btn-gold'));
+  hashPw(newPw).then(h => {
+    adminPwHash = h;
+    localStorage.setItem('adminPwHash', h);
+    localStorage.removeItem('adminPw');
+    showToast('✅ تم تغيير كلمة المرور');
+    document.getElementById('new-pw-input2').value = '';
+    dimSaveBtn(document.querySelector('#admin-admin-pw .admin-btn-gold'));
+  });
 }
 
 // ==================== ADMIN REVIEWS MANAGEMENT ====================
@@ -5470,6 +6639,7 @@ function updateDashboard() {
 // --- PRODUCTS TABLE ---
 function renderAdminProducts() {
   const tbody = document.getElementById('admin-products-table');
+  if (!tbody) return;
   tbody.innerHTML = products.map(p => `
     <tr>
       <td><img class="td-img" src="${p.img}" alt="${p.name}"></td>
@@ -5526,7 +6696,10 @@ async function deleteProduct(id) {
     if (!prod) return;
     try {
       await db.collection('products').doc(prod._fbId || String(id)).delete();
-      incrementCacheVersion('products');
+      await incrementCacheVersion('products');
+      products = products.filter(p => p.id !== id);
+      TFCache.set('products', products);
+      renderFeatured(); renderNewArrivals(); renderRecentlyViewed(); renderAdminProducts();
       showToast('✅ تم حذف المنتج');
     } catch(e) {
       showToast('❌ خطأ: ' + e.message);
@@ -5551,13 +6724,13 @@ async function saveProduct() {
   const existingProd = editId ? products.find(p => String(p.id) === String(editId) || p._fbId === editId) : null;
   let finalImg = imgUrl || (existingProd?.img || '');
 
-  // رفع الصورة الرئيسية على Firebase لو اتاختارت
+  // ضغط الصورة الرئيسية وتحويلها base64 (تقبل أي صيغة، وتُضغط تلقائياً لتبقى دائماً تحت حد Firestore)
   if (imgFile) {
     try {
       showToast('⏳ جارٍ معالجة الصورة الرئيسية...');
-      finalImg = await compressImageToBase64(imgFile, 1000, 1000, 0.90);
+      finalImg = await compressImageToBase64(imgFile, 1100, 1100, 0.80, 350);
     } catch(e) {
-      showToast('❌ فشل معالجة الصورة: ' + (e.message || 'خطأ غير معروف'));
+      showToast('❌ فشل معالجة الصورة: ' + (e.message || 'صيغة غير مدعومة'));
       return;
     }
   }
@@ -5601,7 +6774,15 @@ async function saveProduct() {
     // Use _fbId if available, fallback to String(id)
     const docId = existingProd?._fbId || String(prodId);
     await db.collection('products').doc(docId).set(newProd);
-    incrementCacheVersion('products'); // إبلاغ كل الأجهزة بالتحديث
+    await incrementCacheVersion('products'); // إبلاغ كل الأجهزة بالتحديث
+
+    // تحديث فوري للمصفوفة المحلية على هذا الجهاز بدون انتظار
+    const localIdx = products.findIndex(p => p._fbId === docId || String(p.id) === String(prodId));
+    if (localIdx > -1) { products[localIdx] = { ...newProd, _fbId: docId }; }
+    else { products.push({ ...newProd, _fbId: docId }); }
+    TFCache.set('products', products);
+    renderFeatured(); renderNewArrivals(); renderRecentlyViewed(); renderAdminProducts();
+
     resetProductForm();
     showToast(existingProd ? '✅ تم تعديل المنتج بنجاح — يظهر فوراً على كل الأجهزة' : '✅ تم إضافة المنتج بنجاح — يظهر فوراً على كل الأجهزة');
     if (existingProd) openAdminSection('products');
@@ -5633,9 +6814,10 @@ function clearMainImg() {
 
 // ===== معاينة الصور الإضافية (اختيار متعدد) =====
 function previewExtraImgs(input) {
-  const files = Array.from(input.files).slice(0, 10);
+  const files = Array.from(input.files).slice(0, 4);
   if (!files.length) return;
   const grid = document.getElementById('extra-imgs-preview-grid');
+  if (!grid) { showToast('⚠️ خطأ داخلي: عنصر معاينة الصور غير موجود، أعد فتح صفحة إضافة المنتج'); return; }
   grid.innerHTML = '';
   grid.style.display = 'flex';
 
@@ -5689,16 +6871,15 @@ async function uploadExtraFiles() {
   const fileInput = document.getElementById('prod-extra-files');
   const files = fileInput._selectedFiles || [];
   const urls = [];
-  for (let i = 0; i < files.length; i++) {
+  // حد أقصى 4 صور إضافية، كل واحدة مضغوطة لحجم صغير، لضمان أن حجم المنتج الكلي يبقى دائماً آمناً داخل Firestore (أقل من 1MB)
+  const maxExtra = Math.min(files.length, 4);
+  for (let i = 0; i < maxExtra; i++) {
     const file = files[i];
-    showToast(`⏳ رفع صورة ${i+1} من ${files.length}...`);
-    const ext = file.name.split('.').pop();
-    const ref = storage.ref(`products/extra_${Date.now()}_${i}.${ext}`);
-    const snap = await ref.put(file);
-    const url = await snap.ref.getDownloadURL();
-    urls.push(url);
+    showToast(`⏳ معالجة صورة ${i+1} من ${maxExtra}...`);
+    const dataUrl = await compressImageToBase64(file, 900, 900, 0.75, 150);
+    urls.push(dataUrl);
     const inp = document.getElementById('extra-inp-' + i);
-    if (inp) inp.value = url;
+    if (inp) inp.value = dataUrl;
   }
   return urls;
 }
@@ -5706,6 +6887,7 @@ async function uploadExtraFiles() {
 // ===== تحميل صور إضافية موجودة عند التعديل =====
 function loadExtraImgsPreview(imgUrls) {
   const grid = document.getElementById('extra-imgs-preview-grid');
+  if (!grid) return;
   grid.innerHTML = '';
   if (!imgUrls || !imgUrls.length) { grid.style.display = 'none'; return; }
   grid.style.display = 'flex';
@@ -6379,7 +7561,9 @@ function resetProductForm() {
 
 // --- CATEGORIES ---
 function renderAdminCats() {
-  document.getElementById('admin-cats-table').innerHTML = categories.map(c => `
+  const tbody = document.getElementById('admin-cats-table');
+  if (!tbody) return;
+  tbody.innerHTML = categories.map(c => `
     <tr>
       <td><img src="${c.img||''}" style="height:40px;width:55px;object-fit:cover;border-radius:3px;border:1px solid var(--border);" onerror="this.style.display='none'"></td>
       <td>${c.name_ar}</td>
@@ -6470,7 +7654,15 @@ async function saveCategory() {
       order: isEdit ? (categories.find(c=>c.id===id)?.order ?? categories.length) : categories.length
     };
     await db.collection('categories').doc(id).set(catData);
-    incrementCacheVersion('categories');
+    await incrementCacheVersion('categories');
+
+    // تحديث فوري للمصفوفة المحلية
+    const localIdx = categories.findIndex(c => c.id === id);
+    if (localIdx > -1) { categories[localIdx] = catData; }
+    else { categories.push(catData); }
+    TFCache.set('categories', categories);
+    renderCategories(); renderAdminCats(); updateCatDropdown();
+
     resetCatForm();
     showToast(isEdit ? '✅ تم تعديل القسم — يظهر فوراً على كل الأجهزة' : '✅ تم إضافة القسم — يظهر فوراً على كل الأجهزة');
   } catch(e) {
@@ -6486,22 +7678,18 @@ async function deleteCategory(id) {
   if (confirm('هل أنت متأكد من حذف هذا القسم؟')) {
     try {
       await db.collection('categories').doc(id).delete();
-      incrementCacheVersion('categories');
+      await incrementCacheVersion('categories');
+      categories = categories.filter(c => c.id !== id);
+      TFCache.set('categories', categories);
+      renderCategories(); renderAdminCats(); updateCatDropdown();
       showToast('✅ تم حذف القسم');
     } catch(e) { showToast('❌ خطأ: ' + e.message); }
   }
 }
 
 function addNavLink(catId, nameAr) {
-  const nav = document.querySelector('.nav-inner');
-  const existing = [...nav.querySelectorAll('.nav-link')].find(l => l.getAttribute('onclick')?.includes(`'${catId}'`));
-  if (!existing) {
-    const a = document.createElement('a');
-    a.className = 'nav-link';
-    a.textContent = nameAr;
-    a.setAttribute('onclick', `showCategory('${catId}')`);
-    nav.appendChild(a);
-  }
+  // categories array already updated before calling this — just re-render drawer
+  renderNavDrawer();
 }
 
 // --- SLIDER ---
@@ -6572,24 +7760,88 @@ function resetSlideForm() {
 }
 
 // ── ضغط الصورة بالـ Canvas وتحويلها لـ base64 (بدون Firebase Storage) ──
-function compressImageToBase64(file, maxW = 2500, maxH = 2500, quality = 0.97) {
+// ===== رفع أي صورة على Firebase Storage (تقبل أي صيغة/حجم/جودة) =====
+async function uploadImageToStorage(file, folder = 'products') {
+  return new Promise((resolve, reject) => {
+    // أولاً: نضغط الصورة لتقليل الحجم مع الحفاظ على جودة عالية جداً (لا يحدها حجم Firestore لأنها تذهب لـ Storage)
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('فشل قراءة الصورة'));
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('صورة غير صالحة أو صيغة غير مدعومة'));
+      img.onload = async () => {
+        try {
+          let { width: w, height: h } = img;
+          const maxDim = 3000; // جودة عالية جداً مع تقليل حجم الملف
+          if (w > maxDim || h > maxDim) {
+            const ratio = Math.min(maxDim / w, maxDim / h);
+            w = Math.round(w * ratio);
+            h = Math.round(h * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(async (blob) => {
+            try {
+              const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+              const safeExt = /^[a-z0-9]+$/.test(ext) ? ext : 'jpg';
+              const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${safeExt}`;
+              const ref = storage.ref(path);
+              await ref.put(blob, { contentType: blob.type || file.type || 'image/jpeg' });
+              const url = await ref.getDownloadURL();
+              resolve(url);
+            } catch(err) { reject(err); }
+          }, file.type && file.type.includes('png') ? 'image/png' : 'image/jpeg', 0.92);
+        } catch(err) { reject(err); }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function compressImageToBase64(file, maxW = 1200, maxH = 1200, quality = 0.82, maxKB = 600) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('فشل قراءة الصورة'));
     reader.onload = e => {
       const img = new Image();
-      img.onerror = () => reject(new Error('صورة غير صالحة'));
+      img.onerror = () => reject(new Error('صورة غير صالحة أو صيغة غير مدعومة'));
       img.onload = () => {
-        let { width: w, height: h } = img;
+        let w = img.width, h = img.height;
+        // الحد الأقصى للأبعاد في أول محاولة
         if (w > maxW || h > maxH) {
           const ratio = Math.min(maxW / w, maxH / h);
           w = Math.round(w * ratio);
           h = Math.round(h * ratio);
         }
         const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', quality));
+        const ctx = canvas.getContext('2d');
+
+        // نحاول بجودة وأبعاد متناقصة تدريجياً لحد ما نوصل لحجم آمن أقل من maxKB
+        function attempt(width, height, q) {
+          canvas.width = width; canvas.height = height;
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          return canvas.toDataURL('image/jpeg', q);
+        }
+
+        let result = attempt(w, h, quality);
+        let sizeKB = (result.length * 0.75) / 1024; // تقدير تقريبي لحجم base64
+
+        let tries = 0;
+        while (sizeKB > maxKB && tries < 6) {
+          if (tries < 3) {
+            quality = Math.max(0.5, quality - 0.12); // نقلل الجودة أولاً
+          } else {
+            w = Math.round(w * 0.8); h = Math.round(h * 0.8); // ثم نقلل الأبعاد
+          }
+          result = attempt(w, h, quality);
+          sizeKB = (result.length * 0.75) / 1024;
+          tries++;
+        }
+
+        resolve(result);
       };
       img.src = e.target.result;
     };
@@ -6916,27 +8168,37 @@ function switchCouponTab(type) {
 }
 
 // إضافة كوبون شحن مجاني بكود
-function addFreeShipCodeCoupon() {
+async function addFreeShipCodeCoupon() {
   const code = (document.getElementById('new-freeship-code')?.value || '').trim().toUpperCase();
-  if (!code) { showAdminToast('⚠️ أدخل اسم الكود أولاً'); return; }
+  if (!code) { showToast('⚠️ أدخل اسم الكود أولاً'); return; }
   const coupon = { code, type: 'freeship-code', pct: 0 };
-  db.collection('coupons').doc(code).set(coupon).catch(() => {});
+  try {
+    await db.collection('coupons').doc(code).set(coupon);
+  } catch(e) {
+    showToast('❌ فشل حفظ الكوبون: ' + (e.message || 'تحقق من الاتصال بالإنترنت'));
+    return;
+  }
   let local = JSON.parse(localStorage.getItem('tf_coupons') || '[]');
   local = local.filter(c => c.code !== code);
   local.push(coupon);
   localStorage.setItem('tf_coupons', JSON.stringify(local));
   document.getElementById('new-freeship-code').value = '';
-  showAdminToast('✓ تم إضافة كوبون الشحن المجاني بكود: ' + code);
+  showToast('✓ تم إضافة كوبون الشحن المجاني بكود: ' + code);
   renderCouponsAdmin();
 }
 
 // إضافة كوبون شحن مجاني بقيمة (متعددة)
-function addFreeShipValueCoupon() {
+async function addFreeShipValueCoupon() {
   const minVal = parseInt(document.getElementById('new-freeship-min-value')?.value || '0');
-  if (!minVal || minVal <= 0) { showAdminToast('⚠️ أدخل قيمة صحيحة'); return; }
+  if (!minVal || minVal <= 0) { showToast('⚠️ أدخل قيمة صحيحة'); return; }
   const id = '__FSV_' + minVal + '__';
   const coupon = { code: id, type: 'freeship-value', minValue: minVal, pct: 0 };
-  db.collection('coupons').doc(id).set(coupon).catch(() => {});
+  try {
+    await db.collection('coupons').doc(id).set(coupon);
+  } catch(e) {
+    showToast('❌ فشل حفظ الكوبون: ' + (e.message || 'تحقق من الاتصال بالإنترنت'));
+    return;
+  }
   let local = JSON.parse(localStorage.getItem('tf_coupons') || '[]');
   local = local.filter(c => c.code !== id);
   local.push(coupon);
@@ -6945,17 +8207,22 @@ function addFreeShipValueCoupon() {
   window._freeShipValues = (window._freeShipValues || []).filter(v => v !== minVal);
   window._freeShipValues.push(minVal);
   document.getElementById('new-freeship-min-value').value = '';
-  showAdminToast('✓ تم حفظ: شحن مجاني للفواتير ≥ ' + minVal + ' جنيه');
+  showToast('✓ تم حفظ: شحن مجاني للفواتير ≥ ' + minVal + ' جنيه');
   renderCouponsAdmin();
 }
 
 // إضافة كوبون شحن مجاني بالقطعة (متعددة)
-function addFreeShipQtyCoupon() {
+async function addFreeShipQtyCoupon() {
   const minQty = parseInt(document.getElementById('new-freeship-min-qty')?.value || '0');
-  if (!minQty || minQty <= 0) { showAdminToast('⚠️ أدخل عدد قطع صحيح'); return; }
+  if (!minQty || minQty <= 0) { showToast('⚠️ أدخل عدد قطع صحيح'); return; }
   const id = '__FSQ_' + minQty + '__';
   const coupon = { code: id, type: 'freeship-qty', minQty: minQty, pct: 0 };
-  db.collection('coupons').doc(id).set(coupon).catch(() => {});
+  try {
+    await db.collection('coupons').doc(id).set(coupon);
+  } catch(e) {
+    showToast('❌ فشل حفظ الكوبون: ' + (e.message || 'تحقق من الاتصال بالإنترنت'));
+    return;
+  }
   let local = JSON.parse(localStorage.getItem('tf_coupons') || '[]');
   local = local.filter(c => c.code !== id);
   local.push(coupon);
@@ -6963,28 +8230,38 @@ function addFreeShipQtyCoupon() {
   window._freeShipQtys = (window._freeShipQtys || []).filter(q => q !== minQty);
   window._freeShipQtys.push(minQty);
   document.getElementById('new-freeship-min-qty').value = '';
-  showAdminToast('✓ تم حفظ: شحن مجاني عند طلب ≥ ' + minQty + ' قطعة');
+  showToast('✓ تم حفظ: شحن مجاني عند طلب ≥ ' + minQty + ' قطعة');
   renderCouponsAdmin();
 }
 
 // إضافة كوبون خصم (النوع الأصلي)
-function addCoupon() {
+async function addCoupon() {
   const code = (document.getElementById('new-coupon-code')?.value || '').trim().toUpperCase();
   const pct = parseInt(document.getElementById('new-coupon-pct')?.value || '0');
-  if (!code) { showAdminToast('⚠️ أدخل اسم الكود أولاً'); return; }
+  if (!code) { showToast('⚠️ أدخل اسم الكود أولاً'); return; }
   const coupon = { code, type: 'discount', pct };
-  db.collection('coupons').doc(code).set(coupon).catch(() => {});
+  try {
+    await db.collection('coupons').doc(code).set(coupon);
+  } catch(e) {
+    showToast('❌ فشل حفظ الكوبون: ' + (e.message || 'تحقق من الاتصال بالإنترنت'));
+    return;
+  }
   let local = JSON.parse(localStorage.getItem('tf_coupons') || '[]');
   local = local.filter(c => c.code !== code);
   local.push(coupon);
   localStorage.setItem('tf_coupons', JSON.stringify(local));
   document.getElementById('new-coupon-code').value = '';
-  showAdminToast('✓ تم إضافة الكوبون: ' + code + ' بخصم ' + pct + '%');
+  showToast('✓ تم إضافة الكوبون: ' + code + ' بخصم ' + pct + '%');
   renderCouponsAdmin();
 }
 
-function deleteCoupon(code) {
-  db.collection('coupons').doc(code).delete().catch(() => {});
+async function deleteCoupon(code) {
+  try {
+    await db.collection('coupons').doc(code).delete();
+  } catch(e) {
+    showToast('❌ فشل حذف الكوبون: ' + (e.message || 'تحقق من الاتصال بالإنترنت'));
+    return;
+  }
   let local = JSON.parse(localStorage.getItem('tf_coupons') || '[]');
   const removed = local.find(c => c.code === code);
   local = local.filter(c => c.code !== code);
@@ -6996,7 +8273,7 @@ function deleteCoupon(code) {
   if (removed?.type === 'freeship-qty') {
     window._freeShipQtys = (window._freeShipQtys || []).filter(q => q !== removed.minQty);
   }
-  showAdminToast('تم حذف الكوبون: ' + code);
+  showToast('تم حذف الكوبون: ' + code);
   renderCouponsAdmin();
 }
 
@@ -7094,7 +8371,7 @@ function saveExtraDiscount(pct) {
   db.collection('settings').doc('extraDiscount').set({ pct }).catch(() => {});
   localStorage.setItem('tf_extraDiscountPct', pct);
   updateCheckoutTotal();
-  showAdminToast('✓ تم حفظ نسبة الخصم الإضافي: ' + pct + '%');
+  showToast('✓ تم حفظ نسبة الخصم الإضافي: ' + pct + '%');
 }
 
 // تحميل نسبة الخصم المخزنة
@@ -7131,7 +8408,10 @@ async function saveSettings() {
 }
 
 async function saveTopbar() {
-  const text = document.getElementById('setting-topbar')?.value || '';
+  const rawText = document.getElementById('setting-topbar')?.value || '';
+  // Convert lines to | separated text for the ticker
+  const lines = rawText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  const text = lines.join(' | ');
   siteData.topbar = text;
   const _sb = document.querySelector('[onclick="saveTopbar()"]');
   preSave(_sb);
@@ -7246,7 +8526,7 @@ try {
     </div>
     <button class="btn btn-gold" style="width:100%;justify-content:center;" onclick="checkAdminPassword()">دخول</button>
     <button class="admin-change-pw" onclick="showChangePwForm()">تغيير كلمة المرور</button>
-    <button class="admin-change-pw" style="color:var(--text-muted);margin-top:4px;" onclick="openForgotPwScreen()"><i class="fas fa-envelope"></i> نسيت كلمة المرور؟</button>
+    <button class="admin-change-pw" style="color:var(--text-muted);margin-top:4px;" onclick="adminSendResetEmail()"><i class="fas fa-envelope"></i> نسيت كلمة المرور؟</button>
     <div id="forgot-pw-msg" style="display:none;margin-top:12px;padding:10px;background:#e8f5e9;border-radius:6px;font-size:.8rem;color:#2e7d32;text-align:center;"></div>
     <div id="change-pw-form" style="display:none;margin-top:16px;text-align:right;">
       <div class="admin-pw-input-wrap" style="margin-bottom:10px;">
@@ -7503,8 +8783,15 @@ try {
 
 <script>
 // ==================== ADMIN PASSWORD SYSTEM ====================
-// الباسورد الافتراضي Em@n1234 — يُحفظ بعد التغيير ويظل محفوظاً
-let adminPassword = localStorage.getItem('adminPw') || 'Em@n1234';
+async function hashPw(pw) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// الباسورد يُخزَّن كـ SHA-256 hash فقط — لا يُحفظ النص الأصلي أبداً
+// الهاش الافتراضي يقابل: turk2000
+const DEFAULT_PW_HASH = '78d1e39b8362a819dadd0c73e2a9ca07ec99be9e78743f0651319e909be0fadb';
+let adminPwHash = localStorage.getItem('adminPwHash') || DEFAULT_PW_HASH;
 
 function openAdminWithPassword() {
   document.getElementById('admin-pw-input').value = '';
@@ -7515,27 +8802,55 @@ function openAdminWithPassword() {
   setTimeout(() => document.getElementById('admin-pw-input').focus(), 100);
 }
 
+function openAdminPanel() {
+  document.getElementById('admin-password-modal').classList.remove('show');
+  document.getElementById('admin-panel').classList.add('open');
+  _scrollY = window.scrollY;
+  document.body.style.top = `-${_scrollY}px`;
+  document.body.classList.add('admin-open');
+
+  // تحميل الصلاحيات ثم فتح اللوحة
+  const currentEmail = auth.currentUser?.email || '';
+  loadAdminPermissions(currentEmail).then(() => {
+    applyAdminPermissions();
+  });
+
+  updateDashboard();
+  renderAdminProducts();
+  renderAdminCats();
+  renderAdminSlides();
+  renderOrdersTable();
+  renderShippingZonesAdmin();
+  populateWebhookSelect();
+  loadContactSettingsInputs();
+}
+
+function adminSendResetEmail() {
+  const ADMIN_EMAIL = 'Turk.fashion2000@gmail.com';
+  auth.sendPasswordResetEmail(ADMIN_EMAIL)
+    .then(() => {
+      const msg = document.getElementById('forgot-pw-msg');
+      msg.style.display = 'block';
+      msg.innerHTML = '✅ تم إرسال رابط تغيير كلمة المرور على البريد';
+    })
+    .catch((err) => {
+      const msg = document.getElementById('forgot-pw-msg');
+      msg.style.display = 'block';
+      msg.innerHTML = '❌ حصل خطأ: ' + err.message;
+    });
+}
+
 function checkAdminPassword() {
   const val = document.getElementById('admin-pw-input').value;
-  if (val === adminPassword) {
-    document.getElementById('admin-password-modal').classList.remove('show');
-    document.getElementById('admin-panel').classList.add('open');
-    _scrollY = window.scrollY;
-    document.body.style.top = `-${_scrollY}px`;
-    document.body.classList.add('admin-open');
-    updateDashboard();
-    renderAdminProducts();
-    renderAdminCats();
-    renderAdminSlides();
-    renderOrdersTable();
-    renderShippingZonesAdmin();
-    populateWebhookSelect();
-    loadContactSettingsInputs();
-  } else {
-    document.getElementById('pw-error').style.display = 'block';
-    document.getElementById('admin-pw-input').value = '';
-    document.getElementById('admin-pw-input').focus();
-  }
+  if (!val) { document.getElementById('pw-error').style.display = 'block'; return; }
+  const ADMIN_EMAIL = 'Turk.fashion2000@gmail.com';
+  auth.signInWithEmailAndPassword(ADMIN_EMAIL, val)
+    .then(() => { openAdminPanel(); })
+    .catch(() => {
+      document.getElementById('pw-error').style.display = 'block';
+      document.getElementById('admin-pw-input').value = '';
+      document.getElementById('admin-pw-input').focus();
+    });
 }
 
 function togglePwVisibility() {
@@ -7557,21 +8872,39 @@ function showChangePwForm() {
 function changePw() {
   const oldPw = document.getElementById('old-pw-input').value;
   const newPw = document.getElementById('new-pw-input').value;
-  if (oldPw !== adminPassword) { showToast('❌ كلمة المرور الحالية خاطئة'); return; }
+  if (!oldPw) { showToast('⚠️ أدخل كلمة المرور الحالية'); return; }
   if (newPw.length < 6) { showToast('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
-  adminPassword = newPw;
-  localStorage.setItem('adminPw', newPw);
-  showToast('✓ تم تغيير كلمة المرور وحُفظت بنجاح');
-  document.getElementById('change-pw-form').style.display = 'none';
-  document.getElementById('old-pw-input').value = '';
-  document.getElementById('new-pw-input').value = '';
-  // إرسال بريد تأكيد التغيير
-  sendEmailViaMailto('تم تغيير كلمة مرور لوحة التحكم', 'تم تغيير كلمة المرور بنجاح على متجر ترك فاشون.\n\nإذا لم تقم بهذا التغيير، قم بتغيير كلمة المرور فوراً.');
+  const user = auth.currentUser;
+  if (!user) { showToast('❌ يجب تسجيل الدخول أولاً'); return; }
+  const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPw);
+  user.reauthenticateWithCredential(credential)
+    .then(() => user.updatePassword(newPw))
+    .then(() => {
+      showToast('✅ تم تغيير كلمة المرور بنجاح');
+      document.getElementById('change-pw-form').style.display = 'none';
+      document.getElementById('old-pw-input').value = '';
+      document.getElementById('new-pw-input').value = '';
+    })
+    .catch(e => {
+      if (e.code === 'auth/wrong-password') {
+        showToast('❌ كلمة المرور الحالية خاطئة');
+      } else {
+        showToast('❌ خطأ: ' + e.message);
+      }
+    });
 }
 
 // ==================== FORGOT PASSWORD SCREEN ====================
-const ADMIN_ALLOWED_EMAIL = 'moustafaahmed133@gmail.com';
-const ADMIN_ALLOWED_PHONE = '01211249510';
+// بيانات التحقق تُحمَّل من Firestore فقط — لا تُكتب في الكود
+let _adminContact = null;
+async function getAdminContact() {
+  if (_adminContact) return _adminContact;
+  try {
+    const doc = await db.collection('settings').doc('adminContact').get();
+    _adminContact = doc.exists ? doc.data() : { email: '', phone: '' };
+  } catch(e) { _adminContact = { email: '', phone: '' }; }
+  return _adminContact;
+}
 
 function openForgotPwScreen() {
   document.getElementById('admin-password-modal').classList.remove('show');
@@ -7641,11 +8974,14 @@ function confirmNewPassword() {
   const errEl = document.getElementById('new-pw-err');
   if (pw1.length < 6) { errEl.style.display='block'; errEl.textContent='كلمة المرور يجب أن تكون 6 أحرف على الأقل'; return; }
   if (pw1 !== pw2) { errEl.style.display='block'; errEl.textContent='كلمتا المرور غير متطابقتين'; return; }
-  adminPassword = pw1;
-  localStorage.setItem('adminPw', pw1);
-  document.getElementById('new-pw-overlay').remove();
-  showToast('✅ تم تعيين كلمة المرور الجديدة بنجاح');
-  setTimeout(() => openAdminWithPassword(), 800);
+  hashPw(pw1).then(h => {
+    adminPwHash = h;
+    localStorage.setItem('adminPwHash', h);
+    localStorage.removeItem('adminPw'); // حذف القديم نهائياً
+    document.getElementById('new-pw-overlay').remove();
+    showToast('✅ تم تعيين كلمة المرور الجديدة بنجاح');
+    setTimeout(() => openAdminWithPassword(), 800);
+  });
 }
 
 function adminForgotPassword() { openForgotPwScreen(); }
@@ -7665,13 +9001,15 @@ async function sendForgotPasswordEmail() {
   const phoneVal = document.getElementById('forgot-phone-input').value.trim().replace(/^0/, '');
   const btn = document.getElementById('forgot-send-btn');
 
+  const contact = await getAdminContact();
+
   // Validate identity
   if (isEmail) {
     if (!emailVal) { showForgotMsg('❌ من فضلك أدخل البريد الإلكتروني', 'error'); return; }
-    if (emailVal !== ADMIN_ALLOWED_EMAIL) { showForgotMsg('❌ هذا البريد الإلكتروني غير مسجل لدينا', 'error'); return; }
+    if (emailVal !== contact.email) { showForgotMsg('❌ هذا البريد الإلكتروني غير مسجل لدينا', 'error'); return; }
   } else {
     if (!phoneVal) { showForgotMsg('❌ من فضلك أدخل رقم الهاتف', 'error'); return; }
-    if (phoneVal !== ADMIN_ALLOWED_PHONE.replace(/^0/, '')) { showForgotMsg('❌ رقم الهاتف غير مسجل لدينا', 'error'); return; }
+    if (phoneVal !== contact.phone) { showForgotMsg('❌ رقم الهاتف غير مسجل لدينا', 'error'); return; }
   }
 
   // Generate 6-digit code
@@ -7685,11 +9023,11 @@ async function sendForgotPasswordEmail() {
   showForgotMsg('⏳ جارٍ إرسال الكود...', 'loading');
 
   try {
-    await emailjs.send('service_g4mp6lp', 'template_k539adf', {
-      Mostafa: 'مصطفى',
-      reset_link: 'كود إعادة التعيين: ' + resetCode + '\n\nافتح التطبيق واضغط "نسيت كلمة المرور؟" ثم أدخل هذا الكود.',
-      expiry_time: '30 دقيقة',
-      store_name: 'ترك فاشون'
+    await emailjs.send('service_rzvq9ar', 'template_uka7n8n', {
+      email: contact.email,
+      subject: 'رمز إعادة تعيين كلمة المرور',
+      message: 'تلقينا طلباً لإعادة تعيين كلمة مرور حساب الإدارة الخاص بك. استخدم الكود التالي لإتمام العملية:',
+      code: resetCode
     });
     showForgotMsg('✅ تم إرسال كود التحقق إلى بريدك. أدخله هنا:', 'success');
     showCodeInputField();
@@ -7769,17 +9107,7 @@ function populateGovernorateSelect() {
 }
 
 function updateCities(gov) {
-  const citySel = document.getElementById('co-city');
-  if (!citySel) return;
-  citySel.innerHTML = '<option value="">اختر المدينة / المركز</option>';
-  if (egyptGovs[gov]) {
-    egyptGovs[gov].forEach(city => {
-      const opt = document.createElement('option');
-      opt.value = city;
-      opt.textContent = city;
-      citySel.appendChild(opt);
-    });
-  }
+  // co-city is now a text input — nothing to populate
 }
 
 // ==================== SHIPPING ZONES ====================
@@ -8316,7 +9644,7 @@ async function placeOrder() {
   if (!phone) { showToast('⚠️ أدخل رقم الهاتف'); return; }
   if (!whatsapp) { showToast('⚠️ أدخل رقم الواتساب'); return; }
   if (!gov) { showToast('⚠️ اختر المحافظة'); return; }
-  if (!city) { showToast('⚠️ اختر المدينة'); return; }
+  if (!city) { showToast('⚠️ أدخل المدينة أو المركز'); return; }
   if (!address) { showToast('⚠️ أدخل العنوان بالتفصيل'); return; }
 
   // الإيصال - اجمع بياناته إن وجد (لا يوقف الطلب)
@@ -8327,7 +9655,6 @@ async function placeOrder() {
   const instaNum   = document.getElementById('co-instapay')?.value?.trim() || '';
   const walletNum  = document.getElementById('co-wallet-num')?.value?.trim() || '';
   const bankNum    = document.getElementById('co-bank-num')?.value?.trim() || '';
-  const customerPayNum = document.getElementById('co-customer-paynum')?.value?.trim() || '';
 
   const selectedPayEl = document.querySelector('.payment-method.selected input');
   const payMethod = selectedPayEl ? selectedPayEl.value : 'electronic';
@@ -8355,7 +9682,7 @@ async function placeOrder() {
     status: 'جديد',
     trackingStatus: 'received',
     trackingTimes: { received: new Date().toLocaleString('ar-EG') },
-    instaNum, walletNum, bankNum, customerPayNum,
+    instaNum, walletNum, bankNum,
     receipt: receiptDataUrl || null
   };
 
@@ -8367,6 +9694,14 @@ async function placeOrder() {
       items: newOrder.items.map(i => ({ productId: i.product.id, productName: i.product.name, qty: i.qty, price: i.product.price })),
       receipt: null // لا نحفظ الصورة في Firestore (حجم كبير)
     });
+    // ربط الطلب بحساب العميل إن كان مسجلاً
+    if (currentUser) {
+      await db.collection('users').doc(currentUser.uid).update({
+        orders: firebase.firestore.FieldValue.arrayUnion(orderId)
+      });
+      // إرسال إيميل تأكيد الطلب
+      sendOrderEmail(newOrder);
+    }
   } catch(e) { /* يكمل بدون Firestore */ }
   cart = [];
   updateCartUI();
@@ -9275,20 +10610,31 @@ function toggleOrderTracking(id) {
 // نظام الربط مع شركة الشحن — يُرسل لشركة الشحن رابط Webhook خاص لكل طلب
 // عندما تضغط شركة الشحن على الرابط تتحدث حالة الطلب أوتوماتيك
 
-function getShippingWebhookUrl(orderId, status) {
-  // في بيئة حقيقية، هذا الرابط يكون لـ API endpoint على سيرفر خاص
-  // هنا نحاكي الرابط للعرض فقط
+// يُحمَّل من Firestore عند التشغيل — لا يُكتب في الكود
+let _webhookToken = null;
+async function getWebhookToken() {
+  if (_webhookToken) return _webhookToken;
+  try {
+    const doc = await db.collection('settings').doc('webhookToken').get();
+    _webhookToken = (doc.exists && doc.data().token) ? doc.data().token : 'OFFLINE';
+  } catch(e) { _webhookToken = 'OFFLINE'; }
+  return _webhookToken;
+}
+
+async function getShippingWebhookUrl(orderId, status) {
+  const t = await getWebhookToken();
   const base = window.location.href.split('?')[0];
-  return base + '?order=' + orderId + '&status=' + status + '&token=TF_SHIP_2026';
+  return base + '?order=' + orderId + '&status=' + status + '&token=' + t;
 }
 
 function handleShippingWebhook() {
-  // نتحقق إذا في URL params من شركة الشحن
   const params = new URLSearchParams(window.location.search);
   const orderId = params.get('order');
   const status = params.get('status');
   const token = params.get('token');
-  if (orderId && status && token === 'TF_SHIP_2026') {
+  if (!orderId || !status || !token) return;
+  getWebhookToken().then(validToken => {
+  if (token === validToken) {
     const validStatuses = ['received','preparing','shipped','delivered'];
     if (validStatuses.includes(status)) {
       const order = ordersLog.find(o => o.id == orderId);
@@ -9302,13 +10648,26 @@ function handleShippingWebhook() {
       }
     }
   }
+  });
 }
 
 // تشغيل عند التحميل
 document.addEventListener('DOMContentLoaded', function() {
   handleShippingWebhook();
   if (typeof updateContactPage === 'function') updateContactPage();
+  trackSiteVisit();
 });
+
+// تسجيل زيارة جديدة للموقع (مرة واحدة فقط في الجلسة)
+function trackSiteVisit() {
+  try {
+    if (sessionStorage.getItem('tf_visit_logged')) return;
+    sessionStorage.setItem('tf_visit_logged', '1');
+    db.collection('_meta').doc('site_stats').set({
+      visitorCount: firebase.firestore.FieldValue.increment(1)
+    }, { merge: true }).catch(() => {});
+  } catch(e) {}
+}
 
 // ==================== WEBHOOK LINKS IN ADMIN ====================
 function populateWebhookSelect() {
@@ -9320,12 +10679,13 @@ function populateWebhookSelect() {
   });
 }
 
-function renderWebhookLinks() {
+async function renderWebhookLinks() {
   const orderId = document.getElementById('webhook-order-select').value;
   const cont = document.getElementById('webhook-links-container');
   if (!cont) return;
   if (!orderId) { cont.innerHTML = ''; return; }
   const base = window.location.href.split('?')[0];
+  const t = await getWebhookToken();
   const steps = [
     { key: 'received', label: 'تم استلام الطلب', icon: 'fas fa-clipboard-check', color: '#aaa' },
     { key: 'preparing', label: 'جاري تجهيز الطلب', icon: 'fas fa-box-open', color: '#c9a84c' },
@@ -9336,7 +10696,7 @@ function renderWebhookLinks() {
     <div style="margin-top:12px;">
       <div style="font-size:.82rem;font-weight:700;margin-bottom:10px;">روابط تحديث حالة الطلب <span style="color:var(--gold);font-family:monospace;">#${orderId}</span> — أرسلها لشركة الشحن:</div>
       ${steps.map(s => {
-        const url = base + '?order=' + orderId + '&status=' + s.key + '&token=TF_SHIP_2026';
+        const url = base + '?order=' + orderId + '&status=' + s.key + '&token=' + t;
         return `
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);">
           <i class="${s.icon}" style="color:${s.color};width:16px;text-align:center;"></i>
@@ -9397,6 +10757,33 @@ const _origShowProfileTab = window.showProfileTab;
 
 // ==================== PWA INSTALL PROMPT ====================
 let pwaInstallEvent = null;
+
+// كشف نظام التشغيل لتحديد طريقة عرض تعليمات التثبيت المناسبة
+function isIOSDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPad حديث
+}
+
+// يستخدمه زرار "ثبّت التطبيق" الثابت في القائمة الجانبية
+async function handleInstallAppClick() {
+  if (isIOSDevice()) {
+    // Safari/iOS لا يدعم التثبيت التلقائي، نعرض تعليمات يدوية
+    closeNavDrawer();
+    document.getElementById('ios-install-modal').style.display = 'flex';
+    return;
+  }
+  if (pwaInstallEvent) {
+    // المتصفح يدعم التثبيت التلقائي (Chrome / Samsung Internet / Edge / Opera)
+    pwaInstallEvent.prompt();
+    const { outcome } = await pwaInstallEvent.userChoice;
+    pwaInstallEvent = null;
+    if (outcome === 'accepted') showToast('🎉 تم تثبيت التطبيق بنجاح على هاتفك!');
+    return;
+  }
+  // متصفح أندرويد لا يدعم beforeinstallprompt (مثل Firefox) أو التطبيق مثبّت بالفعل
+  closeNavDrawer();
+  document.getElementById('android-install-modal').style.display = 'flex';
+}
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   pwaInstallEvent = e;

@@ -1,0 +1,106 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Admin Check ──
+    function isAdmin() {
+      return request.auth != null &&
+             (request.auth.token.admin == true ||
+              request.auth.token.email == 'Turk.fashion2000@gmail.com');
+    }
+
+    // Sub-admin check (any authenticated user with a record in /admins)
+    function isSubAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    function isAnyAdmin() {
+      return isAdmin() || isSubAdmin();
+    }
+
+    // ── Admins collection (permissions) ──
+    // الأدمن الرئيسي فقط يقرأ ويكتب
+    match /admins/{email} {
+      allow read, write: if isAdmin();
+    }
+
+    // ── Meta (cache version + site stats) ──
+    match /_meta/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+      allow update: if docId == 'site_stats' &&
+                     request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitorCount']);
+      allow create: if docId == 'site_stats';
+    }
+
+    // ── Products ──
+    match /products/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewCount']);
+    }
+
+    // ── Categories ──
+    match /categories/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Slides / Banner ──
+    match /slides/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Settings ──
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Reviews ──
+    match /reviews/{docId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if isAnyAdmin();
+    }
+
+    // ── Coupons ──
+    match /coupons/{docId} {
+      allow read: if request.auth != null;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Orders ──
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if request.auth != null &&
+                    (resource.data.email == request.auth.token.email ||
+                     isAnyAdmin());
+      allow update, delete: if isAnyAdmin();
+    }
+
+    // ── Deleted / Returned / Cancelled Orders ──
+    match /deleted_orders/{orderId} {
+      allow read, write: if isAnyAdmin();
+    }
+    match /returned_orders/{orderId} {
+      allow read, write: if isAnyAdmin();
+    }
+    match /cancelled_orders/{orderId} {
+      allow read, write: if isAnyAdmin();
+    }
+
+    // ── Users ──
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAnyAdmin();
+    }
+
+    // ── Default: deny everything else ──
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
