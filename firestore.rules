@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Admin Check ──
+    function isAdmin() {
+      return request.auth != null &&
+             (request.auth.token.admin == true ||
+              request.auth.token.email == 'turk.fashion2000@gmail.com');
+    }
+
+    // ── Sub-Admin Check ──
+    function isSubAdmin() {
+      return request.auth != null &&
+             exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower()));
+    }
+
+    function isAnyAdmin() {
+      return isAdmin() || isSubAdmin();
+    }
+
+    // ── Admins Collection ──
+    // الأدمن الرئيسي يقرأ ويكتب أي حساب. أي حساب فرعي يقدر يقرأ مستنده هو بس
+    // (عشان يثبت إنه أدمن فرعي وقت الدخول) لكن مايقدرش يعدّل صلاحياته بنفسه.
+    match /admins/{email} {
+      allow read: if isAdmin() || (request.auth != null && request.auth.token.email.lower() == email.lower());
+      allow write: if isAdmin();
+    }
+
+    // ── Meta ──
+    match /_meta/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+      allow update: if docId == 'site_stats' &&
+                     request.resource.data.diff(resource.data).affectedKeys().hasOnly(['visitorCount']);
+      allow create: if docId == 'site_stats';
+    }
+
+    // ── Products ──
+    match /products/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewCount']);
+    }
+
+    // ── Categories ──
+    match /categories/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Slides / Banner ──
+    match /slides/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Settings ──
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Reviews ──
+    match /reviews/{docId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if isAnyAdmin();
+    }
+
+    // ── Coupons ──
+    match /coupons/{docId} {
+      allow read: if true;
+      allow write: if isAnyAdmin();
+    }
+
+    // ── Orders ──
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if request.auth != null &&
+                    (resource.data.email == request.auth.token.email ||
+                     isAnyAdmin());
+      allow update, delete: if isAnyAdmin();
+    }
+
+    // ── Deleted / Returned / Cancelled Orders ──
+    match /deleted_orders/{orderId} {
+      allow read, write: if isAnyAdmin();
+    }
+    match /returned_orders/{orderId} {
+      allow read, write: if isAnyAdmin();
+    }
+    match /cancelled_orders/{orderId} {
+      allow read, write: if isAnyAdmin();
+    }
+
+    // ── Users ──
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAnyAdmin();
+    }
+
+    // ── Default ──
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
