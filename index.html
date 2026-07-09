@@ -105,18 +105,15 @@ body{
 }
 .topbar a{color:#000000;text-decoration:underline;}
 .topbar-inner{
-  display:inline-flex;
-  animation:ticker-scroll 300s linear infinite;
+  display:inline-block;
+  padding-right:60px;
+  white-space:nowrap;
+  animation:ticker-scroll 22s linear infinite;
   will-change:transform;
 }
-.topbar-inner .ticker-copy{
-  display:inline-block;
-  padding-left:60px;
-  white-space:nowrap;
-}
 @keyframes ticker-scroll{
-  0%{transform:translateX(-50%);}
-  100%{transform:translateX(0%);}
+  0%{transform:translateX(100%);}
+  100%{transform:translateX(-100%);}
 }
 @media (prefers-reduced-motion:reduce){
   .topbar-inner{animation:none;display:block;text-align:center;padding-right:0;}
@@ -2411,7 +2408,7 @@ image-rendering:auto;
   </section>
 
   <!-- ANNOUNCEMENT BAR -->
-  <div class="topbar" id="topbar-bar" style="margin:0 0 0;"><span class="topbar-inner" id="topbar-text"><span class="ticker-copy" id="topbar-text-copy1">خصومات حتى 50% | شحن سريع لجميع المحافظات | استبدال واسترجاع بسهولة | خامات أصلية بأفضل الأسعار | طرق دفع متعددة | عروض حصرية كل أسبوع</span><span class="ticker-copy" id="topbar-text-copy2" aria-hidden="true">خصومات حتى 50% | شحن سريع لجميع المحافظات | استبدال واسترجاع بسهولة | خامات أصلية بأفضل الأسعار | طرق دفع متعددة | عروض حصرية كل أسبوع</span></span></div>
+  <div class="topbar" id="topbar-bar" style="margin:0 0 0;"><span class="topbar-inner" id="topbar-text">خصومات حتى 50% | شحن سريع لجميع المحافظات | استبدال واسترجاع بسهولة | خامات أصلية بأفضل الأسعار | طرق دفع متعددة | عروض حصرية كل أسبوع</span></div>
 
   <!-- NEW ARRIVALS -->
   <section class="featured-fullwidth-section" style="padding-top:0;margin-top:0;margin-bottom:60px;">
@@ -3688,10 +3685,7 @@ function applySettingsLive() {
       topbarContent = topbarContent.join(' | ');
     }
     if (topbarContent.trim()) {
-      const c1 = document.getElementById('topbar-text-copy1');
-      const c2 = document.getElementById('topbar-text-copy2');
-      if (c1) c1.textContent = topbarContent;
-      if (c2) c2.textContent = topbarContent;
+      topbar.textContent = topbarContent;
     }
     // لو النص فاضي من فايربيز، سيب النص الافتراضي الموجود في الصفحة زي ما هو — أفضل من شريط فاضي
   }
@@ -7371,10 +7365,8 @@ async function saveTopbar() {
   preSave(_sb);
   try {
     await db.collection('settings').doc('main').set({ topbar: text }, { merge: true });
-    const c1 = document.getElementById('topbar-text-copy1');
-    const c2 = document.getElementById('topbar-text-copy2');
-    if (c1) c1.textContent = text;
-    if (c2) c2.textContent = text;
+    const el = document.getElementById('topbar-text');
+    if (el) el.textContent = text;
     dimSaveBtn(_sb);
     showToast('✅ تم حفظ الشريط العلوي على كل الأجهزة');
   } catch(e) { _setDirty(_sb); showToast('❌ خطأ في الحفظ: ' + e.message); }
